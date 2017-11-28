@@ -6,7 +6,17 @@ namespace Diff.Expressions.LowLevel
     {
         private Data _data;
 
-        public double AsDouble => _data.DoubleValue.Value;
+        public double AsDouble
+        {
+            get
+            {
+                if (_data.DoubleValue == null)
+                {
+                    _data.DoubleValue = 0;
+                }
+                return _data.DoubleValue.Value;
+            }
+        }
 
         public bool AsBool => _data.BoolValue.Value;
 
