@@ -32,19 +32,9 @@ namespace Diff.Editor
         {
             new HighlightingRule
             {
-                Pattern = new Regex(@"(\/\/.*)", RegexOptions.Compiled),
-                Color = Color.Green
-            },
-            new HighlightingRule
-            {
-                Pattern = new Regex(@"(""(?:\\""|[^""])*"")", RegexOptions.Compiled),
-                Color = Color.Green
-            },
-            new HighlightingRule
-            {
                 Pattern =
                     new Regex(
-                        @"(?:[^a-zA-Z0-9_]|^)(abstract|as|base|bool|break|byte|case|catch|char|checked|class|const|continue|decimal|default|delegate|do|double|else|enum|event|explicit|extern|false|finally|fixed|float|for|foreach|goto|if|implicit|in|int|interface|internal|is|lock|long|namespace|new|null|object|operator|out|override|params|private|protected|public|readonly|ref|return|sbyte|sealed|short|sizeof|stackalloc|static|string|struct|switch|this|throw|true|try|typeof|uint|ulong|unchecked|unsafe|ushort|using|var|virtual|void|volatile|while)(?=(?:[^a-zA-Z0-9_]|$))",
+                        @"(?:[^a-zA-Z0-9_]|^)(if)(?=(?:[^a-zA-Z0-9_]|$))",
                         RegexOptions.Compiled),
                 Color = Color.FromArgb(255, 110, 110, 255)
             },
@@ -528,7 +518,7 @@ namespace Diff.Editor
             _selection.End = IndexToCharPos(_manipulatingSelectionStop + 1);
 
             _manipulatorOriginX = _initialMouseXPos - ManipulatorWidth / 2;
-            _manipulatorOriginY = shiftY + _selection.End.Line * _font.Height - ManipulatorHeight - 4;
+            _manipulatorOriginY = shiftY + _selection.End.Line * LineHeight - ManipulatorHeight;
             Cursor = Cursors.Arrow;
             return true;
         }

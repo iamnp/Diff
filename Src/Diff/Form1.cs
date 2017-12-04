@@ -1,15 +1,22 @@
 ﻿using System;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Media;
 using Diff.Editor;
 using Diff.Expressions;
+using FlowDirection = System.Windows.FlowDirection;
+using MouseEventArgs = System.Windows.Input.MouseEventArgs;
 
-// TODO не давать рисовать график за границами своей линии
-// TODO разобраться с HostRect
-// TODO Функцию отрисовки в Drawer
-// TODO Drawer не extension methodы class
+// === FEATURES ===
+// TODO добавить ползунок для изменения начального значения
+
+// === FIXES ===
+// TODO исправить раскрашивание области под графиком
 // TODO разобраться с кол-во шагов (сейчас 1000)
+// TODO Функцию отрисовки в Drawer, Drawer не extension methodы class, Drawer not-static
+// TODO разобраться с HostRect и растягиванием
+// TODO посмотреть почему убывает последний график на тестах
 
 namespace Diff
 {
@@ -18,13 +25,28 @@ namespace Diff
         private static readonly Rect HostRect = new Rect(0, 0, 1000, 700);
         private readonly GlobalScope _gs = new GlobalScope();
         private readonly MainGraphicOutput _mainGraphics;
+        private double _mouseX = -1;
 
         public MainForm()
         {
             InitializeComponent();
             _mainGraphics = new MainGraphicOutput {DrawingFunc = DrawScene};
+            _mainGraphics.MouseMove += MainGraphicsOnMouseMove;
+            _mainGraphics.MouseLeave += MainGraphicsOnMouseLeave;
             elementHost1.Child = _mainGraphics;
             //VerticalScroll.SmallChange = LineHeight;
+        }
+
+        private void MainGraphicsOnMouseLeave(object sender, MouseEventArgs mouseEventArgs)
+        {
+            _mouseX = -1;
+            _mainGraphics.InvalidateVisual();
+        }
+
+        private void MainGraphicsOnMouseMove(object sender, MouseEventArgs mouseEventArgs)
+        {
+            _mouseX = mouseEventArgs.GetPosition(_mainGraphics).X;
+            _mainGraphics.InvalidateVisual();
         }
 
         private void DrawScene(DrawingContext dc)
@@ -36,12 +58,11 @@ namespace Diff
 
             dc.DrawRectangle(Drawer.WhiteBrush, null, HostRect);
 
-            dc.StartSession();
-
             for (var i = 0; i < _gs.AssignmentStatements.Count; ++i)
             {
+                double? value = null;
                 dc.DrawLine(Drawer.BlackPen, new Point(0, (float) (i + 1) * ExpressionEditor.LineHeight), new Point(
-                    Width,
+                    _mainGraphics.ActualWidth,
                     (float) (i + 1) * ExpressionEditor.LineHeight));
                 if (_gs.AssignmentStatements[i].Assignee != null)
                 {
@@ -53,6 +74,10 @@ namespace Diff
                             if (child.IsDouble)
                             {
                                 var yPoint = child.AsDouble;
+                                if ((int) _mouseX == j)
+                                {
+                                    value = yPoint;
+                                }
                                 yPoint *= -ExpressionEditor.LineHeight / 2.0;
                                 yPoint += i * ExpressionEditor.LineHeight + ExpressionEditor.LineHeight / 2;
                                 dc.DrawPath(new Point(j, yPoint));
@@ -61,16 +86,30 @@ namespace Diff
                         else if (_gs.AssignmentStatements[i].Assignee.IsDouble)
                         {
                             var yPoint = _gs.AssignmentStatements[i].Assignee.AsDouble;
+                            if ((int) _mouseX == j)
+                            {
+                                value = yPoint;
+                            }
                             yPoint *= -ExpressionEditor.LineHeight / 2.0;
                             yPoint += i * ExpressionEditor.LineHeight + ExpressionEditor.LineHeight / 2;
                             dc.DrawPath(new Point(j, yPoint));
                         }
                     }
                 }
-                dc.StopPath();
+                dc.StopPath(new Rect(0, i * ExpressionEditor.LineHeight, _mainGraphics.ActualWidth,
+                    ExpressionEditor.LineHeight));
+                if (value != null)
+                {
+                    var ft = new FormattedText(value.Value.ToString("F2"), CultureInfo.CurrentCulture,
+                        FlowDirection.LeftToRight, new Typeface("Arial"), 12, Brushes.Black);
+                    dc.DrawText(ft, new Point(_mouseX + 4, (i + 1) * ExpressionEditor.LineHeight - ft.Height - 3));
+                }
             }
 
-            dc.FlushSession();
+            if (_mouseX >= 0)
+            {
+                dc.DrawLine(Drawer.BlackPen, new Point(_mouseX, 0), new Point(_mouseX, _mainGraphics.ActualHeight));
+            }
         }
 
         private void expressionEditor1_TextChanged(object sender, EventArgs e)

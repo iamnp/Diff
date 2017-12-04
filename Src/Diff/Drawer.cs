@@ -17,26 +17,10 @@ namespace Diff
             Brush = Brushes.Black
         };
 
-        private static StreamGeometry _geometry;
-        private static StreamGeometryContext _ctx;
-
         static Drawer()
         {
             BlackPen.Freeze();
             WhiteBrush.Freeze();
-        }
-
-        public static void StartSession(this DrawingContext dc)
-        {
-            _geometry = new StreamGeometry();
-            _ctx = _geometry.Open();
-        }
-
-        public static void FlushSession(this DrawingContext dc)
-        {
-            _ctx.Close();
-            _geometry.Freeze();
-            dc.DrawGeometry(null, BlackPen, _geometry);
         }
 
         public static void DrawPath(this DrawingContext dc, Point p)
@@ -52,15 +36,27 @@ namespace Diff
             }
         }
 
-        public static void StopPath(this DrawingContext dc)
+        public static void StopPath(this DrawingContext dc, Rect visible)
         {
             if (!_finished)
             {
-                _ctx.BeginFigure(_firstPoint, false, false);
-                if (Points.Count > 0)
+                var geometry = new StreamGeometry();
+                using (var ctx = geometry.Open())
                 {
-                    _ctx.PolyLineTo(Points, true, false);
+                    ctx.BeginFigure(_firstPoint, true, true);
+                    if (Points.Count > 0)
+                    {
+                        Points.Add(visible.BottomRight);
+                        Points.Add(visible.BottomLeft);
+                        ctx.PolyLineTo(Points, true, false);
+                    }
                 }
+                geometry.Freeze();
+                var visibleRect = new RectangleGeometry(visible);
+                visibleRect.Freeze();
+                dc.PushClip(visibleRect);
+                dc.DrawGeometry(Brushes.LightGray, BlackPen, geometry);
+                dc.Pop();
             }
             Points.Clear();
             _finished = true;
