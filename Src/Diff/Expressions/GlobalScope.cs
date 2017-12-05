@@ -7,7 +7,7 @@ namespace Diff.Expressions
 {
     public class GlobalScope
     {
-        public const int Iterations = 1000;
+        public static int Iterations = 300;
         public readonly List<AssignmentStatement> AssignmentStatements = new List<AssignmentStatement>();
         public readonly Dictionary<string, Variable> Globals = new Dictionary<string, Variable>();
 
