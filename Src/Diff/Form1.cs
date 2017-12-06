@@ -2,12 +2,14 @@
 using System.Windows;
 using System.Windows.Forms;
 using Diff.Expressions;
-using MouseEventArgs = System.Windows.Input.MouseEventArgs;
 
 // === FEATURES ===
-// TODO добавить ползунок для изменения начального значения
+
 
 // === FIXES ===
+// TODO make use of _dragStart in Manipulator (shift scroller a little bit)
+// TODO Master scroller behaviaour: can extend beyond 1.0 and -1.0, but the scroller position is restricted to the line width range
+
 // TODO посмотреть почему убывает последний график на тестах
 
 namespace Diff
@@ -18,15 +20,18 @@ namespace Diff
         private readonly GlobalScope _gs = new GlobalScope();
         private readonly MainGraphicOutput _mainGraphics = new MainGraphicOutput();
 
+        // ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
+        private readonly Manipulator _manipulator;
+
         public MainForm()
         {
             InitializeComponent();
 
-            _mainGraphics.MouseMove += MainGraphicsOnMouseMove;
-            _mainGraphics.MouseLeave += MainGraphicsOnMouseLeave;
             _mainGraphics.SizeChanged += MainGraphicsOnSizeChanged;
             elementHost1.Child = _mainGraphics;
-            _drawer = new Drawer(_gs, _mainGraphics);
+
+            _manipulator = new Manipulator(_mainGraphics, _gs);
+            _drawer = new Drawer(_gs, _mainGraphics, _manipulator);
 
             //VerticalScroll.SmallChange = LineHeight;
         }
@@ -34,20 +39,8 @@ namespace Diff
         private void MainGraphicsOnSizeChanged(object sender, SizeChangedEventArgs sizeChangedEventArgs)
         {
             _drawer.HostRect = new Rect(0, 0, _mainGraphics.ActualWidth, _mainGraphics.ActualHeight);
-            GlobalScope.Iterations = (int) _mainGraphics.ActualWidth + 1;
+            GlobalScope.Iterations = (int) _mainGraphics.ActualWidth + 1 - Drawer.LeftOffset;
             RecalcNeeded();
-            _mainGraphics.InvalidateVisual();
-        }
-
-        private void MainGraphicsOnMouseLeave(object sender, MouseEventArgs mouseEventArgs)
-        {
-            _drawer.MouseX = -1;
-            _mainGraphics.InvalidateVisual();
-        }
-
-        private void MainGraphicsOnMouseMove(object sender, MouseEventArgs mouseEventArgs)
-        {
-            _drawer.MouseX = mouseEventArgs.GetPosition(_mainGraphics).X;
             _mainGraphics.InvalidateVisual();
         }
 
@@ -79,7 +72,7 @@ namespace Diff
 
         private void button1_Click(object sender, EventArgs e)
         {
-            expressionEditor1.Text = "a = 1";
+            expressionEditor1.Text = "a = 1.00";
         }
 
         private void button4_Click(object sender, EventArgs e)

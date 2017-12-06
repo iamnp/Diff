@@ -31,6 +31,11 @@ namespace Diff.Expressions.LowLevel
 
         public bool IsArray => _data.Array != null;
 
+        public void SetDoubleValue(double v)
+        {
+            _data.DoubleValue = v;
+        }
+
         public Variable NthItem(int n)
         {
             if (_data.Array == null)

@@ -11,6 +11,16 @@ namespace Diff.Expressions
         public readonly List<AssignmentStatement> AssignmentStatements = new List<AssignmentStatement>();
         public readonly Dictionary<string, Variable> Globals = new Dictionary<string, Variable>();
 
+        public void SetInitialValue(double v, int index)
+        {
+            var var = AssignmentStatements[index].Assignee;
+            if (var.Parent != null)
+            {
+                var = var.Parent;
+            }
+            var.SetDoubleValue(v);
+        }
+
         public LineMarker Evaluate()
         {
             for (var j = 0; j < Iterations; ++j)
