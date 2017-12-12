@@ -7,9 +7,17 @@ namespace Diff.Expressions
 {
     public class GlobalScope
     {
+        private const string SearchVar = "searched";
+        public const string NVar = "n";
         public static int Iterations = 300;
+        private readonly AssignmentStatement _searchStatement = new AssignmentStatement();
         public readonly List<AssignmentStatement> AssignmentStatements = new List<AssignmentStatement>();
         public readonly Dictionary<string, Variable> Globals = new Dictionary<string, Variable>();
+
+        public string Search(string expr)
+        {
+            return _searchStatement.SetExprString(SearchVar + "[" + NVar + "] = (" + expr + ")");
+        }
 
         public void SetInitialValue(double v, int index)
         {
@@ -27,12 +35,19 @@ namespace Diff.Expressions
             {
                 for (var i = 0; i < AssignmentStatements.Count; ++i)
                 {
-                    AssignmentStatements[i].Locals["n"] = Variable.Const(j);
+                    AssignmentStatements[i].Locals[NVar] = Variable.Const(j);
                     var errorMsg = AssignmentStatements[i].Evaluate(Globals);
                     if (errorMsg != null)
                     {
                         return new LineMarker {Color = Color.Red, Line = i + 1, Text = errorMsg};
                     }
+                }
+
+                _searchStatement.Locals[NVar] = Variable.Const(j);
+                var errorMsgg = _searchStatement.Evaluate(Globals);
+                if (errorMsgg != null)
+                {
+                    return new LineMarker {Color = Color.Red, Line = -1, Text = errorMsgg};
                 }
             }
             return null;

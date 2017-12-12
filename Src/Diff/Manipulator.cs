@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
 using Diff.Editor;
 using Diff.Expressions;
@@ -10,7 +9,7 @@ namespace Diff
     {
         private readonly GlobalScope _gs;
         private readonly MainGraphicOutput _mainGraphics;
-        private Point _dragStart;
+        private double _dragShiftY;
         public Rect InitialValueManipulatorRect;
         public int ManipulatedStatement;
         public double MouseX = -1;
@@ -44,7 +43,7 @@ namespace Diff
             if (InitialValueManipulatorRect.Contains(p))
             {
                 DragStarted = true;
-                _dragStart = p;
+                _dragShiftY = p.Y - (InitialValueManipulatorRect.Top + InitialValueManipulatorRect.Bottom) / 2.0;
             }
         }
 
@@ -52,6 +51,7 @@ namespace Diff
         {
             MouseX = -1;
             MouseY = -1;
+            DragStarted = false;
             _mainGraphics.InvalidateVisual();
         }
 
@@ -61,14 +61,18 @@ namespace Diff
             MouseX = p.X;
             MouseY = p.Y;
 
+            if (MouseX > Drawer.LeftOffset)
+            {
+                DragStarted = false;
+            }
+
             if (DragStarted)
             {
-                var linesAbove = (int) MouseY / ExpressionEditor.LineHeight;
-                var v = (MouseY - linesAbove * ExpressionEditor.LineHeight) / ExpressionEditor.LineHeight;
+                var v = (MouseY - _dragShiftY - ManipulatedStatement * ExpressionEditor.LineHeight) /
+                        ExpressionEditor.LineHeight;
                 v = 1 - v;
                 v *= 2;
                 v -= 1;
-                Debug.WriteLine(v);
                 _gs.SetInitialValue(v, ManipulatedStatement);
             }
             _gs.Evaluate();

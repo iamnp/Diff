@@ -191,8 +191,17 @@ namespace Diff
             {
                 for (var i = 0; i < initialPoints.Length; ++i)
                 {
+                    var y = initialPoints[i].Y;
+                    if (y > ExpressionEditor.LineHeight * (i + 1))
+                    {
+                        y = ExpressionEditor.LineHeight * (i + 1);
+                    }
+                    if (y < ExpressionEditor.LineHeight * i)
+                    {
+                        y = ExpressionEditor.LineHeight * i;
+                    }
                     var dx = initialPoints[i].X - _manipulator.MouseX + LeftOffset;
-                    var dy = initialPoints[i].Y - _manipulator.MouseY;
+                    var dy = y - _manipulator.MouseY;
                     var newDist = dx * dx + dy * dy;
                     if ((newDist < bestDist) || (bestIndex == -1))
                     {
@@ -221,7 +230,16 @@ namespace Diff
 
             var ft = new FormattedText(initialValues[bestIndex].Value.ToString("F2"), CultureInfo.CurrentCulture,
                 FlowDirection.LeftToRight, new Typeface("Arial"), 12, Brushes.Black);
-            var p1 = new Point(LeftOffset - ft.Width - 2, initialPoints[bestIndex].Y - ft.Height / 2);
+            var yy = initialPoints[bestIndex].Y;
+            if (yy > ExpressionEditor.LineHeight * (bestIndex + 1))
+            {
+                yy = ExpressionEditor.LineHeight * (bestIndex + 1);
+            }
+            if (yy < ExpressionEditor.LineHeight * bestIndex)
+            {
+                yy = ExpressionEditor.LineHeight * bestIndex;
+            }
+            var p1 = new Point(LeftOffset - ft.Width - 2, yy - ft.Height / 2);
             _manipulator.InitialValueManipulatorRect = new Rect(p1, new Point(p1.X + ft.Width, p1.Y + ft.Height));
             dc.DrawRoundedRectangle(Brushes.Aqua, null, _manipulator.InitialValueManipulatorRect, 3, 3);
             dc.DrawText(ft, p1);

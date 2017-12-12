@@ -11,7 +11,7 @@ namespace Diff.Expressions
 
         public AssignmentStatement()
         {
-            Locals.Add("n", Variable.Const(0.0));
+            Locals.Add(GlobalScope.NVar, Variable.Const(0.0));
         }
 
         public Variable Assignee { get; private set; }

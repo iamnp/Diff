@@ -1,15 +1,15 @@
 ﻿using System;
+using System.Drawing;
 using System.Windows;
 using System.Windows.Forms;
 using Diff.Expressions;
 
 // === FEATURES ===
-
+// TODO добавить поиск: отрисовка
 
 // === FIXES ===
-// TODO make use of _dragStart in Manipulator (shift scroller a little bit)
-// TODO Master scroller behaviaour: can extend beyond 1.0 and -1.0, but the scroller position is restricted to the line width range
 
+// === BACKLOG ===
 // TODO посмотреть почему убывает последний график на тестах
 
 namespace Diff
@@ -20,9 +20,6 @@ namespace Diff
         private readonly GlobalScope _gs = new GlobalScope();
         private readonly MainGraphicOutput _mainGraphics = new MainGraphicOutput();
 
-        // ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
-        private readonly Manipulator _manipulator;
-
         public MainForm()
         {
             InitializeComponent();
@@ -30,8 +27,8 @@ namespace Diff
             _mainGraphics.SizeChanged += MainGraphicsOnSizeChanged;
             elementHost1.Child = _mainGraphics;
 
-            _manipulator = new Manipulator(_mainGraphics, _gs);
-            _drawer = new Drawer(_gs, _mainGraphics, _manipulator);
+            var manipulator = new Manipulator(_mainGraphics, _gs);
+            _drawer = new Drawer(_gs, _mainGraphics, manipulator);
 
             //VerticalScroll.SmallChange = LineHeight;
         }
@@ -40,16 +37,14 @@ namespace Diff
         {
             _drawer.HostRect = new Rect(0, 0, _mainGraphics.ActualWidth, _mainGraphics.ActualHeight);
             GlobalScope.Iterations = (int) _mainGraphics.ActualWidth + 1 - Drawer.LeftOffset;
-            RecalcNeeded();
-            _mainGraphics.InvalidateVisual();
+            RecalcRedraw();
         }
 
         private void expressionEditor1_TextChanged(object sender, EventArgs e)
         {
             expressionEditor1.RemoveAllMarkers();
             StatementsUpdated();
-            RecalcNeeded();
-            _mainGraphics.InvalidateVisual();
+            RecalcRedraw();
         }
 
         private void StatementsUpdated()
@@ -61,13 +56,37 @@ namespace Diff
             }
         }
 
-        private void RecalcNeeded()
+        private void Recalc()
         {
             var marker = _gs.Evaluate();
             if (marker != null)
             {
-                expressionEditor1.AddMarker(marker);
+                if (marker.Line == -1)
+                {
+                    searchTextBox.ForeColor = Color.Red;
+                }
+                else
+                {
+                    expressionEditor1.AddMarker(marker);
+                }
             }
+        }
+
+        private void RecalcRedraw()
+        {
+            Recalc();
+            _mainGraphics.InvalidateVisual();
+        }
+
+        private void searchTextBox_TextChanged(object sender, EventArgs e)
+        {
+            if (_gs.Search(searchTextBox.Text) != null)
+            {
+                searchTextBox.ForeColor = Color.Red;
+                return;
+            }
+            searchTextBox.ForeColor = Color.Black;
+            RecalcRedraw();
         }
 
         private void button1_Click(object sender, EventArgs e)
