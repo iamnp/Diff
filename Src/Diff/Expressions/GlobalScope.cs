@@ -19,6 +19,17 @@ namespace Diff.Expressions
             return _searchStatement.SetExprString(SearchVar + "[" + NVar + "] = (" + expr + ")");
         }
 
+        public bool IsIterationFound(int n)
+        {
+            Variable v;
+            if (Globals.TryGetValue(SearchVar, out v) && v.NthItem(n).IsBool)
+            {
+                return v.NthItem(n).AsBool;
+            }
+
+            return false;
+        }
+
         public void SetInitialValue(double v, int index)
         {
             var var = AssignmentStatements[index].Assignee;
@@ -26,6 +37,7 @@ namespace Diff.Expressions
             {
                 var = var.Parent;
             }
+
             var.SetDoubleValue(v);
         }
 
@@ -50,6 +62,7 @@ namespace Diff.Expressions
                     return new LineMarker {Color = Color.Red, Line = -1, Text = errorMsgg};
                 }
             }
+
             return null;
         }
 

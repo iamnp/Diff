@@ -39,6 +39,7 @@ namespace Diff
             {
                 return;
             }
+
             var p = mouseButtonEventArgs.GetPosition(_mainGraphics);
             if (InitialValueManipulatorRect.Contains(p))
             {
@@ -75,6 +76,7 @@ namespace Diff
                 v -= 1;
                 _gs.SetInitialValue(v, ManipulatedStatement);
             }
+
             _gs.Evaluate();
             _mainGraphics.InvalidateVisual();
         }

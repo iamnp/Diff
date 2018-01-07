@@ -14,6 +14,7 @@ namespace Diff.Expressions.LowLevel
                 {
                     _data.DoubleValue = 0;
                 }
+
                 return _data.DoubleValue.Value;
             }
         }

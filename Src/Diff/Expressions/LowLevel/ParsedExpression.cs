@@ -65,6 +65,7 @@ namespace Diff.Expressions.LowLevel
                             {
                                 ++p;
                             }
+
                             --p;
                             literals.Add(double.Parse(MakeSubstring(start, p).Replace(".", ",")));
                             outputQueue.AddLast(new Tuple<int, int>(LiteralId, literals.Count - 1));
@@ -77,10 +78,12 @@ namespace Diff.Expressions.LowLevel
                             {
                                 outputQueue.AddLast(operatorStack.Pop());
                             }
+
                             if (operatorStack.Count == 0)
                             {
                                 throw new Exception("Invalid expr!");
                             }
+
                             afterComma = true;
                         }
                         else if (char.IsLetter(*p)) // TOKEN: function or variable
@@ -97,6 +100,7 @@ namespace Diff.Expressions.LowLevel
                             {
                                 ++p;
                             }
+
                             --p;
                             var funcOrVar = MakeSubstring(start, p);
                             if (Calculator.UnaryFunctions.ContainsKey(funcOrVar)
@@ -136,9 +140,11 @@ namespace Diff.Expressions.LowLevel
                                 {
                                     outputQueue.AddLast(operatorStack.Pop());
                                 }
+
                                 operators.Add(o1);
                                 operatorStack.Push(new Tuple<int, int>(OperatorId, operators.Count - 1));
                             }
+
                             afterOp = true;
                         }
                         else if ((*p == '(') || (*p == '['))
@@ -165,6 +171,7 @@ namespace Diff.Expressions.LowLevel
                             {
                                 outputQueue.AddLast(operatorStack.Pop());
                             }
+
                             operatorStack.Pop();
                             if ((operatorStack.Count > 0) && (operatorStack.Peek().Item1 == FunctionId))
                             {
@@ -181,6 +188,7 @@ namespace Diff.Expressions.LowLevel
                 {
                     throw new Exception("Invalid expr!");
                 }
+
                 outputQueue.AddLast(operatorStack.Pop());
             }
 
@@ -206,6 +214,7 @@ namespace Diff.Expressions.LowLevel
                         {
                             globals.Add(_variables[token.Item2], Variable.Empty(_variables[token.Item2]));
                         }
+
                         varStack.Push(globals[_variables[token.Item2]]);
                     }
                 }
@@ -219,6 +228,7 @@ namespace Diff.Expressions.LowLevel
                     {
                         throw new Exception("Invalid expr!");
                     }
+
                     var v1 = varStack.Pop();
                     var v2 = varStack.Pop();
                     varStack.Push(Calculator.Operators[_operators[token.Item2]](v2, v1));
@@ -233,6 +243,7 @@ namespace Diff.Expressions.LowLevel
                         {
                             throw new Exception("Invalid expr!");
                         }
+
                         varStack.Push(Calculator.UnaryFunctions[funcName](varStack.Pop()));
                     }
                     else if (Calculator.BinaryFunctions.ContainsKey(funcName))
@@ -241,6 +252,7 @@ namespace Diff.Expressions.LowLevel
                         {
                             throw new Exception("Invalid expr!");
                         }
+
                         var v1 = varStack.Pop();
                         var v2 = varStack.Pop();
                         varStack.Push(Calculator.BinaryFunctions[funcName](v2, v1));
@@ -251,6 +263,7 @@ namespace Diff.Expressions.LowLevel
                         {
                             throw new Exception("Invalid expr!");
                         }
+
                         var v1 = varStack.Pop();
                         var v2 = varStack.Pop();
                         var v3 = varStack.Pop();
@@ -258,10 +271,12 @@ namespace Diff.Expressions.LowLevel
                     }
                 }
             }
+
             if (varStack.Count > 1)
             {
                 throw new Exception("Invalid expr!");
             }
+
             return varStack.Peek();
         }
 

@@ -135,6 +135,7 @@ namespace Diff.Editor
             {
                 _selection.Start.Line = _lines.Length - 1;
             }
+
             if (_selection.Start.Column >= _lines[_selection.Start.Line].Length)
             {
                 _selection.Start.Column = _lines[_selection.Start.Line].Length;
@@ -144,10 +145,12 @@ namespace Diff.Editor
             {
                 _selection.End.Line = _lines.Length - 1;
             }
+
             if (_selection.End.Column >= _lines[_selection.Start.Line].Length)
             {
                 _selection.End.Column = _lines[_selection.Start.Line].Length;
             }
+
             PosCaret();
             ScrollToCaret();
             OnTextChanged(EventArgs.Empty);
@@ -164,6 +167,7 @@ namespace Diff.Editor
                     max = _lines[i].Length;
                 }
             }
+
             var h = _lines.Length * LineHeight;
             var add = Width - ClientRectangle.Width;
             AutoScrollMinSize = new Size((int) (max * _charWidth + add + DockWidth + OffsetFromDock), h);
@@ -179,10 +183,12 @@ namespace Diff.Editor
             {
                 return false;
             }
+
             if ((_lastModifiers & Keys.Control) == Keys.Control)
             {
                 return false;
             }
+
             if (c == '\b')
             {
                 BackspacePressed();
@@ -199,6 +205,7 @@ namespace Diff.Editor
             {
                 ReplaceSelectionWith(c.ToString());
             }
+
             PosCaret();
             return true;
         }
@@ -223,30 +230,37 @@ namespace Diff.Editor
             {
                 return true;
             }
+
             if (((key & Keys.Alt) != Keys.Alt) && ((key & Keys.KeyCode) == Keys.Left))
             {
                 return true;
             }
+
             if (((key & Keys.Alt) != Keys.Alt) && ((key & Keys.KeyCode) == Keys.Down))
             {
                 return true;
             }
+
             if (((key & Keys.Alt) != Keys.Alt) && ((key & Keys.KeyCode) == Keys.Up))
             {
                 return true;
             }
+
             if (((key & Keys.Alt) != Keys.Alt) && ((key & Keys.KeyCode) == Keys.End))
             {
                 return true;
             }
+
             if (((key & Keys.Alt) != Keys.Alt) && ((key & Keys.KeyCode) == Keys.Home))
             {
                 return true;
             }
+
             if ((key & Keys.KeyCode) == Keys.Tab)
             {
                 return true;
             }
+
             if ((key & Keys.KeyCode) == Keys.Delete)
             {
                 return true;
@@ -263,6 +277,7 @@ namespace Diff.Editor
                 SetCharPosToNearestToPoint(_selection.End, e.X, e.Y, AutoScrollPosition.X, AutoScrollPosition.Y);
                 SmoothRefresh();
             }
+
             if (_manipulating)
             {
                 _manipulatorValue = 0;
@@ -280,6 +295,7 @@ namespace Diff.Editor
                 ManipulateSelectedNumber(e.X);
                 SmoothRefresh();
             }
+
             if (_selecting)
             {
                 SetCharPosToNearestToPoint(_selection.End, e.X, e.Y, AutoScrollPosition.X, AutoScrollPosition.Y);
@@ -294,6 +310,7 @@ namespace Diff.Editor
             {
                 return;
             }
+
             SetCharPosToNearestToPoint(_selection.End, e.X, e.Y, AutoScrollPosition.X, AutoScrollPosition.Y);
 
             if ((_lastModifiers & Keys.Control) == Keys.Control)
@@ -309,6 +326,7 @@ namespace Diff.Editor
                     _selection.Start = _selection.End.Copy();
                 }
             }
+
             SmoothRefresh();
         }
 
@@ -318,10 +336,12 @@ namespace Diff.Editor
             {
                 _lastModifiers &= ~Keys.Shift;
             }
+
             if (e.KeyCode == Keys.Alt)
             {
                 _lastModifiers &= ~Keys.Alt;
             }
+
             if (e.KeyCode == Keys.ControlKey)
             {
                 _lastModifiers &= ~Keys.Control;
@@ -334,20 +354,24 @@ namespace Diff.Editor
             {
                 return;
             }
+
             _lastModifiers = e.Modifiers;
             if (e.KeyData == Keys.Delete)
             {
                 DeletePressed();
                 PosCaret();
             }
+
             if (e.KeyCode == Keys.Right)
             {
                 MoveSelectionToRight((e.Modifiers & Keys.Shift) == Keys.Shift);
             }
+
             if (e.KeyCode == Keys.Left)
             {
                 MoveSelectionToLeft((e.Modifiers & Keys.Shift) == Keys.Shift);
             }
+
             if (e.KeyCode == Keys.Up)
             {
                 if ((e.Modifiers & Keys.Control) == Keys.Control)
@@ -359,6 +383,7 @@ namespace Diff.Editor
                     MoveSelectionUp((e.Modifiers & Keys.Shift) == Keys.Shift);
                 }
             }
+
             if (e.KeyCode == Keys.Down)
             {
                 if ((e.Modifiers & Keys.Control) == Keys.Control)
@@ -370,6 +395,7 @@ namespace Diff.Editor
                     MoveSelectionDown((e.Modifiers & Keys.Shift) == Keys.Shift);
                 }
             }
+
             if ((e.KeyCode == Keys.A) && ((e.Modifiers & Keys.Control) == Keys.Control))
             {
                 _selection.Start = new Position {Line = 0, Column = 0};
@@ -399,6 +425,7 @@ namespace Diff.Editor
                 {
                     _selection.Start = _selection.End.Copy();
                 }
+
                 SmoothRefresh();
             }
 
@@ -409,6 +436,7 @@ namespace Diff.Editor
                 {
                     _selection.Start = _selection.End.Copy();
                 }
+
                 SmoothRefresh();
             }
         }
@@ -460,6 +488,7 @@ namespace Diff.Editor
             {
                 ReplaceSelectionWith(numStr);
             }
+
             _lastNum = num;
 
             _manipulatingSelectionStop = _manipulatingSelectionStart + numStr.Length - 1;
@@ -564,11 +593,13 @@ namespace Diff.Editor
                             _toolTip.Show(_markers[i].Text, this, DockWidth, markerY - MarkerSize / 2);
                             _showingToolTipLine = _markers[i].Line;
                         }
+
                         shown = true;
                         break;
                     }
                 }
             }
+
             if (!shown)
             {
                 _toolTip.RemoveAll();
@@ -588,6 +619,7 @@ namespace Diff.Editor
             {
                 ScrollUp(firstLine - _selection.End.Line);
             }
+
             if (_selection.End.Line > lastLine - 1)
             {
                 ScrollDown(_selection.End.Line - lastLine + 1);
@@ -600,6 +632,7 @@ namespace Diff.Editor
             {
                 ScrollLeft(firstColumn - _selection.End.Column + Math.Min(add, _selection.End.Column));
             }
+
             if (_selection.End.Column > lastColumn - 4)
             {
                 ScrollRight(
@@ -653,6 +686,7 @@ namespace Diff.Editor
             {
                 Invalidate();
             }
+
             base.WndProc(ref m);
         }
 
@@ -778,6 +812,7 @@ namespace Diff.Editor
                     WinApi.ShowCaret(Handle);
                     _caretVisible = true;
                 }
+
                 WinApi.SetCaretPos(caretX,
                     AutoScrollPosition.Y + _selection.End.Line * LineHeight + (LineHeight - _font.Height) / 2);
             }
@@ -817,6 +852,7 @@ namespace Diff.Editor
                     _selection.End = _selection.Start.Copy();
                 }
             }
+
             SmoothRefresh();
         }
 
@@ -853,6 +889,7 @@ namespace Diff.Editor
                     _selection.End = _selection.Start.Copy();
                 }
             }
+
             SmoothRefresh();
         }
 
@@ -862,6 +899,7 @@ namespace Diff.Editor
             {
                 return;
             }
+
             pos.Line -= 1;
             if (_lines[pos.Line].Length - 1 < pos.Column)
             {
@@ -893,9 +931,11 @@ namespace Diff.Editor
                         var sel = _selection.Sorted();
                         _selection.End = sel.Start;
                     }
+
                     _selection.Start = _selection.End.Copy();
                 }
             }
+
             SmoothRefresh();
         }
 
@@ -905,6 +945,7 @@ namespace Diff.Editor
             {
                 return;
             }
+
             pos.Line += 1;
             if (_lines[pos.Line].Length - 1 < pos.Column)
             {
@@ -940,9 +981,11 @@ namespace Diff.Editor
                         var sel = _selection.Sorted();
                         _selection.End = sel.End;
                     }
+
                     _selection.Start = _selection.End.Copy();
                 }
             }
+
             SmoothRefresh();
         }
 
@@ -997,6 +1040,7 @@ namespace Diff.Editor
                 {
                     return;
                 }
+
                 var pos = CharPosToIndex(_selection.End);
                 if (_selection.End.Column == 0)
                 {
@@ -1007,6 +1051,7 @@ namespace Diff.Editor
                     {
                         _selection.End.Line -= 1;
                     }
+
                     _selection.End.Column = len - 1;
                 }
                 else
@@ -1019,6 +1064,7 @@ namespace Diff.Editor
                         _selection.End.Column -= 1;
                     }
                 }
+
                 _selection.Start = _selection.End.Copy();
             }
             else
@@ -1060,6 +1106,7 @@ namespace Diff.Editor
             {
                 i += 1;
             }
+
             return s.Substring(0, i);
         }
 
@@ -1087,6 +1134,7 @@ namespace Diff.Editor
             {
                 cnt += _lines[i].Length + 1;
             }
+
             cnt += p.Column;
             return cnt;
         }
@@ -1100,8 +1148,10 @@ namespace Diff.Editor
                 {
                     return new Position {Line = i, Column = index - cnt};
                 }
+
                 cnt += _lines[i].Length + 1;
             }
+
             return new Position {Line = _lines.Length - 1, Column = _lines[_lines.Length - 1].Length};
         }
 
@@ -1134,6 +1184,7 @@ namespace Diff.Editor
                 SetLayoutSize();
                 _needToSetLayoutSize = false;
             }
+
             DrawVisibleSelection(e.Graphics, AutoScrollPosition.X + DockWidth + OffsetFromDock, AutoScrollPosition.Y);
             DrawLineSeparators(e.Graphics, AutoScrollPosition.Y);
             DrawVisibleText(e.Graphics, AutoScrollPosition.X + DockWidth + OffsetFromDock, AutoScrollPosition.Y);
@@ -1174,6 +1225,7 @@ namespace Diff.Editor
                     return true;
                 }
             }
+
             return false;
         }
 
@@ -1201,6 +1253,7 @@ namespace Diff.Editor
                     }
                 }
             }
+
             ranges.Sort((a, b) => a.Start.CompareTo(b.Start));
             return ranges;
         }
@@ -1218,6 +1271,7 @@ namespace Diff.Editor
                     shiftX + ranges[i].Start * _charWidth, shiftY + y, StringFormat.GenericTypographic);
                 last = ranges[i].Start + ranges[i].Length;
             }
+
             g.DrawString(line.Substring(last, line.Length - last), _font, new SolidBrush(_defaultTextColor),
                 shiftX + last * _charWidth, shiftY + y, StringFormat.GenericTypographic);
         }
@@ -1267,6 +1321,7 @@ namespace Diff.Editor
             {
                 column2 = 1;
             }
+
             g.FillRectangle(_selectionBrush,
                 shiftX + column1 * _charWidth,
                 shiftY + line * LineHeight + (LineHeight - _font.Height) / 2,
@@ -1289,6 +1344,7 @@ namespace Diff.Editor
                         MarkerSize);
                 }
             }
+
             g.SmoothingMode = SmoothingMode.None;
         }
 
@@ -1298,6 +1354,7 @@ namespace Diff.Editor
             {
                 return;
             }
+
             g.FillRectangle(_manipulatorBack, _manipulatorOriginX, _manipulatorOriginY, ManipulatorWidth,
                 ManipulatorHeight);
             var a = _manipulatorOriginX + ManipulatorWidth / 2;
@@ -1308,6 +1365,7 @@ namespace Diff.Editor
                 a = b;
                 b = t;
             }
+
             g.FillRectangle(_manipulatorFront, a, _manipulatorOriginY, b - a, ManipulatorHeight);
         }
 

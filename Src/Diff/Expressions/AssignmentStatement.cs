@@ -27,6 +27,7 @@ namespace Diff.Expressions
                 Assignee = null;
                 return ex.Message;
             }
+
             return null;
         }
 
@@ -43,6 +44,7 @@ namespace Diff.Expressions
                     return ex.Message;
                 }
             }
+
             return null;
         }
     }

@@ -23,6 +23,7 @@
                 sel.Start = sel.End;
                 sel.End = t;
             }
+
             return sel;
         }
     }

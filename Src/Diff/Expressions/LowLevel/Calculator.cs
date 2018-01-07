@@ -89,6 +89,7 @@ namespace Diff.Expressions.LowLevel
                     return true;
                 }
             }
+
             return false;
         }
     }

@@ -5,7 +5,9 @@ using System.Windows.Forms;
 using Diff.Expressions;
 
 // === FEATURES ===
-// TODO добавить поиск: отрисовка
+// TODO добавить выделение интервалов руками
+// TODO сделать найденные интервалы кликабельными
+// TODO добавить редукции над интервалами
 
 // === FIXES ===
 
@@ -85,6 +87,7 @@ namespace Diff
                 searchTextBox.ForeColor = Color.Red;
                 return;
             }
+
             searchTextBox.ForeColor = Color.Black;
             RecalcRedraw();
         }
