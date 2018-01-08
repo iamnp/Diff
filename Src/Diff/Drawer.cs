@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Media;
 using Diff.Editor;
 using Diff.Expressions;
+using Diff.Manipulators;
 
 namespace Diff
 {
@@ -19,11 +20,13 @@ namespace Diff
         };
 
         private readonly GlobalScope _gs;
+        private readonly Brush _hoveredSearchAreaBrush = new SolidColorBrush(Color.FromArgb(100, 0, 0, 0));
         private readonly MainGraphicOutput _mainGraphics;
         private readonly Manipulator _manipulator;
 
         private readonly List<Point> _points = new List<Point>();
-        private readonly Brush _searcAreaBrush = new SolidColorBrush(Color.FromArgb(60, 0, 0, 0));
+        private readonly Brush _searchAreaBrush = new SolidColorBrush(Color.FromArgb(60, 0, 0, 0));
+        private readonly Brush _selectedSearchAreaBrush = new SolidColorBrush(Color.FromArgb(140, 0, 0, 0));
         private readonly Point _topLeftOffset = new Point(LeftOffset, TopOffset);
         private readonly Brush _whiteBrush = new SolidColorBrush(Colors.White);
         private bool _finished = true;
@@ -43,7 +46,9 @@ namespace Diff
 
             _blackPen.Freeze();
             _whiteBrush.Freeze();
-            _searcAreaBrush.Freeze();
+            _searchAreaBrush.Freeze();
+            _selectedSearchAreaBrush.Freeze();
+            _hoveredSearchAreaBrush.Freeze();
 
             _mainGraphics.DrawingFunc = DrawScene;
         }
@@ -131,7 +136,7 @@ namespace Diff
                             if (child.IsDouble)
                             {
                                 var yPoint = child.AsDouble;
-                                if ((int) _manipulator.MouseX - LeftOffset == j)
+                                if ((int) _manipulator.InitialValueManipulator.MouseX - LeftOffset == j)
                                 {
                                     value = yPoint;
                                 }
@@ -152,7 +157,7 @@ namespace Diff
                         else if (_gs.AssignmentStatements[i].Assignee.IsDouble)
                         {
                             var yPoint = _gs.AssignmentStatements[i].Assignee.AsDouble;
-                            if ((int) _manipulator.MouseX - LeftOffset == j)
+                            if ((int) _manipulator.InitialValueManipulator.MouseX - LeftOffset == j)
                             {
                                 value = yPoint;
                             }
@@ -174,12 +179,12 @@ namespace Diff
 
                 StopPath(dc, new Rect(0, i * ExpressionEditor.LineHeight, _mainGraphics.ActualWidth,
                     ExpressionEditor.LineHeight));
-                if ((value != null) && (_manipulator.MouseX > LeftOffset))
+                if ((value != null) && (_manipulator.InitialValueManipulator.MouseX > LeftOffset))
                 {
                     var ft = new FormattedText(value.Value.ToString("F2"), CultureInfo.CurrentCulture,
                         FlowDirection.LeftToRight, new Typeface("Arial"), 12, Brushes.Black);
                     dc.DrawText(ft,
-                        new Point(_manipulator.MouseX + 4 - LeftOffset,
+                        new Point(_manipulator.InitialValueManipulator.MouseX + 4 - LeftOffset,
                             (i + 1) * ExpressionEditor.LineHeight - ft.Height - 3));
                 }
 
@@ -188,12 +193,12 @@ namespace Diff
                     (float) (i + 1) * ExpressionEditor.LineHeight));
             }
 
-            DrawSearchArea(dc);
+            DrawSearchIntervals(dc);
 
-            if (_manipulator.MouseX > LeftOffset)
+            if (_manipulator.InitialValueManipulator.MouseX > LeftOffset)
             {
-                dc.DrawLine(_blackPen, new Point(_manipulator.MouseX - LeftOffset, 0),
-                    new Point(_manipulator.MouseX - LeftOffset, _mainGraphics.ActualHeight));
+                dc.DrawLine(_blackPen, new Point(_manipulator.InitialValueManipulator.MouseX - LeftOffset, 0),
+                    new Point(_manipulator.InitialValueManipulator.MouseX - LeftOffset, _mainGraphics.ActualHeight));
             }
 
             dc.Pop();
@@ -225,39 +230,21 @@ namespace Diff
             }
         }
 
-        private void DrawSearchArea(DrawingContext dc)
+        private void DrawSearchIntervals(DrawingContext dc)
         {
-            var start = -1;
-            for (var j = 0; j < GlobalScope.Iterations; ++j)
+            for (var i = 0; i < _gs.SearchIntervalsLength; ++i)
             {
-                if (_gs.IsIterationFound(j))
-                {
-                    if (start == -1)
-                    {
-                        start = j;
-                    }
-                }
-                else
-                {
-                    if (start != -1)
-                    {
-                        dc.DrawRectangle(_searcAreaBrush, null,
-                            new Rect(new Point(start, 0), new Point(j - 1, _mainGraphics.ActualHeight)));
-                        start = -1;
-                    }
-                }
-            }
-
-            if (start != -1)
-            {
-                dc.DrawRectangle(_searcAreaBrush, null,
-                    new Rect(new Point(start, 0), new Point(GlobalScope.Iterations, _mainGraphics.ActualHeight)));
+                dc.DrawRectangle(_gs.SearchIntervals[i].Selected
+                        ? _selectedSearchAreaBrush
+                        : (_gs.SearchIntervals[i].Hovered ? _hoveredSearchAreaBrush : _searchAreaBrush), null,
+                    new Rect(new Point(_gs.SearchIntervals[i].Start, 0),
+                        new Point(_gs.SearchIntervals[i].End - 1, _mainGraphics.ActualHeight)));
             }
         }
 
         private void DrawInitialValueManipulator(DrawingContext dc, Point[] initialPoints, double?[] initialValues)
         {
-            if (_manipulator.MouseX > LeftOffset)
+            if (_manipulator.InitialValueManipulator.MouseX > LeftOffset)
             {
                 return;
             }
@@ -265,9 +252,9 @@ namespace Diff
             var bestDist = 0.0;
             var bestIndex = -1;
 
-            if (_manipulator.DragStarted)
+            if (_manipulator.InitialValueManipulator.DragStarted)
             {
-                bestIndex = _manipulator.ManipulatedStatement;
+                bestIndex = _manipulator.InitialValueManipulator.ManipulatedStatement;
             }
             else
             {
@@ -284,8 +271,8 @@ namespace Diff
                         y = ExpressionEditor.LineHeight * i;
                     }
 
-                    var dx = initialPoints[i].X - _manipulator.MouseX + LeftOffset;
-                    var dy = y - (_manipulator.MouseY - TopOffset);
+                    var dx = initialPoints[i].X - _manipulator.InitialValueManipulator.MouseX + LeftOffset;
+                    var dy = y - (_manipulator.InitialValueManipulator.MouseY - TopOffset);
                     var newDist = dx * dx + dy * dy;
                     if ((newDist < bestDist) || (bestIndex == -1))
                     {
@@ -310,7 +297,7 @@ namespace Diff
                 return;
             }
 
-            _manipulator.ManipulatedStatement = bestIndex;
+            _manipulator.InitialValueManipulator.ManipulatedStatement = bestIndex;
 
             var ft = new FormattedText(initialValues[bestIndex].Value.ToString("F2"), CultureInfo.CurrentCulture,
                 FlowDirection.LeftToRight, new Typeface("Arial"), 12, Brushes.Black);
@@ -326,8 +313,10 @@ namespace Diff
             }
 
             var p1 = new Point(LeftOffset - ft.Width - 2, yy - ft.Height / 2);
-            _manipulator.InitialValueManipulatorRect = new Rect(p1, new Point(p1.X + ft.Width, p1.Y + ft.Height));
-            dc.DrawRoundedRectangle(Brushes.Aqua, null, _manipulator.InitialValueManipulatorRect, 3, 3);
+            _manipulator.InitialValueManipulator.InitialValueManipulatorRect =
+                new Rect(p1, new Point(p1.X + ft.Width, p1.Y + ft.Height));
+            dc.DrawRoundedRectangle(Brushes.Aqua, null,
+                _manipulator.InitialValueManipulator.InitialValueManipulatorRect, 3, 3);
             dc.DrawText(ft, p1);
         }
     }

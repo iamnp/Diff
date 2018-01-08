@@ -3,13 +3,16 @@ using System.Drawing;
 using System.Windows;
 using System.Windows.Forms;
 using Diff.Expressions;
+using Diff.Manipulators;
 
 // === FEATURES ===
-// TODO добавить выделение интервалов руками
 // TODO сделать найденные интервалы кликабельными
+// TODO сделать пользовательские интервалы
 // TODO добавить редукции над интервалами
+// TODO добавить подсказки при использовании
 
 // === FIXES ===
+// TODO починить поломку при резком увелечнии или уменьшении первого параметра
 
 // === BACKLOG ===
 // TODO посмотреть почему убывает последний график на тестах
@@ -100,7 +103,12 @@ namespace Diff
         private void button4_Click(object sender, EventArgs e)
         {
             expressionEditor1.Text =
-                "a[n] = a[n-1]-0.05*b[n-1]\r\nb[n] = b[n-1]+0.05*a[n]\r\nc[n] = if(a[n] > 0, 1, -1)\r\nd[n] = d[n-1] + 0.03*c[n]";
+                "a[n] = a[n-1]-0.050*b[n-1]\r\nb[n] = b[n-1]+0.050*a[n]\r\nc[n] = if(a[n] > 0, 1, -1)\r\nd[n] = d[n-1] + 0.030*c[n]";
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            searchTextBox.Text = "a[n+1] > a[n]";
         }
     }
 }

@@ -13,6 +13,28 @@ namespace Diff.Expressions
         private readonly AssignmentStatement _searchStatement = new AssignmentStatement();
         public readonly List<AssignmentStatement> AssignmentStatements = new List<AssignmentStatement>();
         public readonly Dictionary<string, Variable> Globals = new Dictionary<string, Variable>();
+        public readonly List<SearchInterval> SearchIntervals = new List<SearchInterval>();
+        public int SearchIntervalsLength { get; private set; }
+
+        public void ClearSearchIntervals()
+        {
+            SearchIntervalsLength = 0;
+        }
+
+        public void AddSearchInterval(int start, int end)
+        {
+            if (SearchIntervals.Count < SearchIntervalsLength + 1)
+            {
+                SearchIntervals.Add(new SearchInterval {Start = start, End = end});
+            }
+            else
+            {
+                SearchIntervals[SearchIntervalsLength].Start = start;
+                SearchIntervals[SearchIntervalsLength].End = end;
+            }
+
+            SearchIntervalsLength += 1;
+        }
 
         public string Search(string expr)
         {
@@ -43,6 +65,8 @@ namespace Diff.Expressions
 
         public LineMarker Evaluate()
         {
+            ClearSearchIntervals();
+
             for (var j = 0; j < Iterations; ++j)
             {
                 for (var i = 0; i < AssignmentStatements.Count; ++i)
@@ -51,19 +75,52 @@ namespace Diff.Expressions
                     var errorMsg = AssignmentStatements[i].Evaluate(Globals);
                     if (errorMsg != null)
                     {
-                        return new LineMarker {Color = Color.Red, Line = i + 1, Text = errorMsg};
+                        return new LineMarker { Color = Color.Red, Line = i + 1, Text = errorMsg };
                     }
                 }
+            }
 
+            for (var j = 0; j < Iterations; ++j)
+            {
                 _searchStatement.Locals[NVar] = Variable.Const(j);
                 var errorMsgg = _searchStatement.Evaluate(Globals);
                 if (errorMsgg != null)
                 {
-                    return new LineMarker {Color = Color.Red, Line = -1, Text = errorMsgg};
+                    return new LineMarker { Color = Color.Red, Line = -1, Text = errorMsgg };
                 }
             }
 
+            UpdateSearchIntervals();
+
             return null;
+        }
+
+        private void UpdateSearchIntervals()
+        {
+            var start = -1;
+            for (var j = 0; j < Iterations; ++j)
+            {
+                if (IsIterationFound(j))
+                {
+                    if (start == -1)
+                    {
+                        start = j;
+                    }
+                }
+                else
+                {
+                    if (start != -1)
+                    {
+                        AddSearchInterval(start, j - 1);
+                        start = -1;
+                    }
+                }
+            }
+
+            if (start != -1)
+            {
+                AddSearchInterval(start, Iterations);
+            }
         }
 
         public List<LineMarker> UpdateAssignmentStatementsList(string[] statements)
@@ -90,6 +147,14 @@ namespace Diff.Expressions
             }
 
             return invalidStatements;
+        }
+
+        public class SearchInterval
+        {
+            public int End;
+            public bool Hovered;
+            public bool Selected;
+            public int Start;
         }
     }
 }
