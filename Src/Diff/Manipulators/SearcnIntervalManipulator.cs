@@ -7,6 +7,7 @@ namespace Diff.Manipulators
     {
         private readonly GlobalScope _gs;
         private readonly MainGraphicOutput _mainGraphics;
+        private GlobalScope.SearchInterval _hoveredInterval;
         private GlobalScope.SearchInterval _selectedInterval;
         public double MouseX = -1;
         public double MouseY = -1;
@@ -45,6 +46,8 @@ namespace Diff.Manipulators
             var p = mouseEventArgs.GetPosition(_mainGraphics);
             MouseX = p.X;
             MouseY = p.Y;
+            p.Y -= Drawer.TopOffset;
+            p.X -= Drawer.LeftOffset;
 
             if (mouseEventArgs.RightButton == MouseButtonState.Pressed)
             {
@@ -53,8 +56,8 @@ namespace Diff.Manipulators
                     DragStarted = true;
                     _gs.ManualSearchInterval = new GlobalScope.SearchInterval
                     {
-                        Start = (int) p.X - Drawer.LeftOffset,
-                        End = (int) p.X - Drawer.LeftOffset,
+                        Start = (int) p.X,
+                        End = (int) p.X,
                         Selected = true
                     };
                     _selectedInterval = _gs.ManualSearchInterval;
@@ -62,7 +65,27 @@ namespace Diff.Manipulators
                     _gs.UpdateSearchIntervals();
                 }
 
-                _gs.ManualSearchInterval.End = (int) p.X - Drawer.LeftOffset;
+                _gs.ManualSearchInterval.End = (int) p.X;
+            }
+
+            if ((mouseEventArgs.RightButton == MouseButtonState.Released) &&
+                (mouseEventArgs.LeftButton == MouseButtonState.Released))
+            {
+                if (_hoveredInterval != null)
+                {
+                    _hoveredInterval.Hovered = false;
+                    _hoveredInterval = null;
+                }
+
+                for (var i = 0; i < _gs.SearchIntervalsLength; ++i)
+                {
+                    if ((_gs.SearchIntervals[i].Start <= p.X) && (_gs.SearchIntervals[i].End >= p.X))
+                    {
+                        _hoveredInterval = _gs.SearchIntervals[i];
+                        _hoveredInterval.Hovered = true;
+                        break;
+                    }
+                }
             }
 
             _mainGraphics.InvalidateVisual();
