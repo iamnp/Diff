@@ -6,7 +6,6 @@ using Diff.Expressions;
 using Diff.Manipulators;
 
 // === FEATURES ===
-// TODO fix selecting manual interval
 // TODO добавить длину интервала текстом
 
 // TODO добавить редукции над интервалами (mean, max, min)

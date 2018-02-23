@@ -7,8 +7,11 @@ namespace Diff.Manipulators
     {
         private readonly GlobalScope _gs;
         private readonly MainGraphicOutput _mainGraphics;
+
+        private bool _dragStarted;
         private GlobalScope.SearchInterval _hoveredInterval;
         private GlobalScope.SearchInterval _selectedInterval;
+        private int intervalStart;
         public double MouseX = -1;
         public double MouseY = -1;
 
@@ -23,8 +26,6 @@ namespace Diff.Manipulators
             _mainGraphics.MouseUp += MainGraphicsOnMouseUp;
         }
 
-        public bool DragStarted { get; private set; }
-
         private void MainGraphicsOnMouseUp(object sender, MouseButtonEventArgs mouseButtonEventArgs)
         {
             var p = mouseButtonEventArgs.GetPosition(_mainGraphics);
@@ -33,11 +34,7 @@ namespace Diff.Manipulators
 
             if (mouseButtonEventArgs.ChangedButton == MouseButton.Right)
             {
-                if (DragStarted)
-                {
-                    _gs.ManualSearchInterval.End = (int) p.X;
-                    DragStarted = false;
-                }
+                _dragStarted = false;
             }
         }
 
@@ -51,21 +48,31 @@ namespace Diff.Manipulators
 
             if (mouseEventArgs.RightButton == MouseButtonState.Pressed)
             {
-                if (!DragStarted)
+                if (!_dragStarted)
                 {
-                    DragStarted = true;
+                    _dragStarted = true;
                     _gs.ManualSearchInterval = new GlobalScope.SearchInterval
                     {
                         Start = (int) p.X,
                         End = (int) p.X,
                         Selected = true
                     };
+                    intervalStart = (int) p.X;
                     _selectedInterval = _gs.ManualSearchInterval;
                     _gs.ClearSearchIntervals();
                     _gs.UpdateSearchIntervals();
                 }
 
-                _gs.ManualSearchInterval.End = (int) p.X;
+                if (p.X >= intervalStart)
+                {
+                    _gs.ManualSearchInterval.Start = intervalStart;
+                    _gs.ManualSearchInterval.End = (int) p.X;
+                }
+                else
+                {
+                    _gs.ManualSearchInterval.End = intervalStart;
+                    _gs.ManualSearchInterval.Start = (int) p.X;
+                }
             }
 
             if ((mouseEventArgs.RightButton == MouseButtonState.Released) &&
