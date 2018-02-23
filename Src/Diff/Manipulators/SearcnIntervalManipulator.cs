@@ -7,7 +7,6 @@ namespace Diff.Manipulators
     {
         private readonly GlobalScope _gs;
         private readonly MainGraphicOutput _mainGraphics;
-        private double _dragShiftY;
         private GlobalScope.SearchInterval _selectedInterval;
         public double MouseX = -1;
         public double MouseY = -1;
