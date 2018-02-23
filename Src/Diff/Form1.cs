@@ -103,7 +103,7 @@ namespace Diff
         private void button4_Click(object sender, EventArgs e)
         {
             expressionEditor1.Text =
-                "a[n] = a[n-1]-0.050*b[n-1]\r\nb[n] = b[n-1]+0.050*a[n]\r\nc[n] = if(a[n] > 0, 1, -1)\r\nd[n] = d[n-1] + 0.030*c[n]";
+                "a[n+1] = a[n]-0.050*b[n]\r\nb[n+1] = b[n]+0.050*a[n+1]\r\nc[n+1] = if(a[n] > 0, 1, -1)\r\nd[n+1] = d[n] + 0.030*c[n]";
         }
 
         private void button2_Click(object sender, EventArgs e)

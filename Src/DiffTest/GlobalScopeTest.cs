@@ -16,7 +16,7 @@ namespace DiffTest
             gs.Evaluate();
             Assert.AreEqual(gs.Globals["a"].AsDouble, 1.0);
 
-            gs.AssignmentStatements[0].SetExprString("a[n] = a[n-1] + 1");
+            gs.AssignmentStatements[0].SetExprString("a[n+1] = a[n] + 1");
             gs.Evaluate();
             Assert.AreEqual(gs.Globals["a"].IsArray, true);
             Assert.AreEqual(gs.Globals["a"].AsDouble, 1.0);
@@ -40,8 +40,8 @@ namespace DiffTest
             gs.Evaluate();
             Assert.AreEqual(gs.Globals["b"].AsDouble, 2.0);
 
-            gs.AssignmentStatements[0].SetExprString("a[n] = a[n-1] - 0.01*b[n-1]");
-            gs.AssignmentStatements[1].SetExprString("b[n] = b[n-1] + 0.01*a[n]");
+            gs.AssignmentStatements[0].SetExprString("a[n+1] = a[n] - 0.01*b[n]");
+            gs.AssignmentStatements[1].SetExprString("b[n+1] = b[n] + 0.01*a[n+1]");
             gs.Evaluate();
             Assert.AreEqual(gs.Globals["a"].IsArray, true);
             Assert.AreEqual(gs.Globals["b"].IsArray, true);

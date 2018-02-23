@@ -71,22 +71,22 @@ namespace Diff.Expressions
             {
                 for (var i = 0; i < AssignmentStatements.Count; ++i)
                 {
-                    AssignmentStatements[i].Locals[NVar] = Variable.Const(j);
+                    AssignmentStatements[i].Locals[NVar] = Variable.Const(j - 1);
                     var errorMsg = AssignmentStatements[i].Evaluate(Globals);
                     if (errorMsg != null)
                     {
-                        return new LineMarker { Color = Color.Red, Line = i + 1, Text = errorMsg };
+                        return new LineMarker {Color = Color.Red, Line = i + 1, Text = errorMsg};
                     }
                 }
             }
 
             for (var j = 0; j < Iterations; ++j)
             {
-                _searchStatement.Locals[NVar] = Variable.Const(j);
+                _searchStatement.Locals[NVar] = Variable.Const(j - 1);
                 var errorMsgg = _searchStatement.Evaluate(Globals);
                 if (errorMsgg != null)
                 {
-                    return new LineMarker { Color = Color.Red, Line = -1, Text = errorMsgg };
+                    return new LineMarker {Color = Color.Red, Line = -1, Text = errorMsgg};
                 }
             }
 
