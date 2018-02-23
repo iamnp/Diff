@@ -14,6 +14,7 @@ namespace Diff.Expressions
         public readonly List<AssignmentStatement> AssignmentStatements = new List<AssignmentStatement>();
         public readonly Dictionary<string, Variable> Globals = new Dictionary<string, Variable>();
         public readonly List<SearchInterval> SearchIntervals = new List<SearchInterval>();
+        public SearchInterval ManualSearchInterval;
         public int SearchIntervalsLength { get; private set; }
 
         public void ClearSearchIntervals()
@@ -31,6 +32,20 @@ namespace Diff.Expressions
             {
                 SearchIntervals[SearchIntervalsLength].Start = start;
                 SearchIntervals[SearchIntervalsLength].End = end;
+            }
+
+            SearchIntervalsLength += 1;
+        }
+
+        public void AddSearchInterval(SearchInterval si)
+        {
+            if (SearchIntervals.Count < SearchIntervalsLength + 1)
+            {
+                SearchIntervals.Add(si);
+            }
+            else
+            {
+                SearchIntervals[SearchIntervalsLength] = si;
             }
 
             SearchIntervalsLength += 1;
@@ -95,8 +110,14 @@ namespace Diff.Expressions
             return null;
         }
 
-        private void UpdateSearchIntervals()
+        public void UpdateSearchIntervals()
         {
+            if (ManualSearchInterval != null)
+            {
+                AddSearchInterval(ManualSearchInterval);
+                return;
+            }
+
             var start = -1;
             for (var j = 0; j < Iterations; ++j)
             {

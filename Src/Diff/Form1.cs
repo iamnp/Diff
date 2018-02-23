@@ -6,7 +6,9 @@ using Diff.Expressions;
 using Diff.Manipulators;
 
 // === FEATURES ===
-// TODO сделать пользовательские интервалы
+// TODO окрашивать hovered search intervals
+// TODO добавить длину интервала текстом
+
 // TODO добавить редукции над интервалами (mean, max, min)
 // TODO добавить подсказки при использовании
 

@@ -22,8 +22,22 @@ namespace Diff.Manipulators
             _mainGraphics.MouseUp += MainGraphicsOnMouseUp;
         }
 
+        public bool DragStarted { get; private set; }
+
         private void MainGraphicsOnMouseUp(object sender, MouseButtonEventArgs mouseButtonEventArgs)
         {
+            var p = mouseButtonEventArgs.GetPosition(_mainGraphics);
+            p.Y -= Drawer.TopOffset;
+            p.X -= Drawer.LeftOffset;
+
+            if (mouseButtonEventArgs.ChangedButton == MouseButton.Right)
+            {
+                if (DragStarted)
+                {
+                    _gs.ManualSearchInterval.End = (int) p.X;
+                    DragStarted = false;
+                }
+            }
         }
 
         public void MainGraphicsOnMouseMove(object sender, MouseEventArgs mouseEventArgs)
@@ -32,17 +46,36 @@ namespace Diff.Manipulators
             MouseX = p.X;
             MouseY = p.Y;
 
+            if (mouseEventArgs.RightButton == MouseButtonState.Pressed)
+            {
+                if (!DragStarted)
+                {
+                    DragStarted = true;
+                    _gs.ManualSearchInterval = new GlobalScope.SearchInterval
+                    {
+                        Start = (int) p.X - Drawer.LeftOffset,
+                        End = (int) p.X - Drawer.LeftOffset,
+                        Selected = true
+                    };
+                    _selectedInterval = _gs.ManualSearchInterval;
+                    _gs.ClearSearchIntervals();
+                    _gs.UpdateSearchIntervals();
+                }
+
+                _gs.ManualSearchInterval.End = (int) p.X - Drawer.LeftOffset;
+            }
+
             _mainGraphics.InvalidateVisual();
         }
 
         private void MainGraphicsOnMouseDown(object sender, MouseButtonEventArgs mouseButtonEventArgs)
         {
+            var p = mouseButtonEventArgs.GetPosition(_mainGraphics);
+            p.Y -= Drawer.TopOffset;
+            p.X -= Drawer.LeftOffset;
+
             if (mouseButtonEventArgs.ChangedButton == MouseButton.Left)
             {
-                var p = mouseButtonEventArgs.GetPosition(_mainGraphics);
-                p.Y -= Drawer.TopOffset;
-                p.X -= Drawer.LeftOffset;
-
                 if (_selectedInterval != null)
                 {
                     _selectedInterval.Selected = false;
@@ -58,6 +91,17 @@ namespace Diff.Manipulators
                         break;
                     }
                 }
+            }
+            else if (mouseButtonEventArgs.ChangedButton == MouseButton.Right)
+            {
+                if (_gs.ManualSearchInterval != null)
+                {
+                    _gs.ManualSearchInterval.Selected = false;
+                }
+
+                _gs.ManualSearchInterval = null;
+                _gs.ClearSearchIntervals();
+                _gs.UpdateSearchIntervals();
             }
 
             _mainGraphics.InvalidateVisual();
