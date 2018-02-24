@@ -10,8 +10,7 @@ namespace Diff.Manipulators
 
         private bool _dragStarted;
         private GlobalScope.SearchInterval _hoveredInterval;
-        private GlobalScope.SearchInterval _selectedInterval;
-        private int intervalStart;
+        private int _intervalStart;
         public double MouseX = -1;
         public double MouseY = -1;
 
@@ -25,6 +24,8 @@ namespace Diff.Manipulators
             _mainGraphics.MouseDown += MainGraphicsOnMouseDown;
             _mainGraphics.MouseUp += MainGraphicsOnMouseUp;
         }
+
+        public GlobalScope.SearchInterval SelectedInterval { get; set; }
 
         private void MainGraphicsOnMouseUp(object sender, MouseButtonEventArgs mouseButtonEventArgs)
         {
@@ -53,24 +54,23 @@ namespace Diff.Manipulators
                     _dragStarted = true;
                     _gs.ManualSearchInterval = new GlobalScope.SearchInterval
                     {
-                        Start = (int) p.X,
-                        End = (int) p.X,
+                        Start = _intervalStart,
+                        End = _intervalStart,
                         Selected = true
                     };
-                    intervalStart = (int) p.X;
-                    _selectedInterval = _gs.ManualSearchInterval;
+                    SelectedInterval = _gs.ManualSearchInterval;
                     _gs.ClearSearchIntervals();
                     _gs.UpdateSearchIntervals();
                 }
 
-                if (p.X >= intervalStart)
+                if (p.X >= _intervalStart)
                 {
-                    _gs.ManualSearchInterval.Start = intervalStart;
+                    _gs.ManualSearchInterval.Start = _intervalStart;
                     _gs.ManualSearchInterval.End = (int) p.X;
                 }
                 else
                 {
-                    _gs.ManualSearchInterval.End = intervalStart;
+                    _gs.ManualSearchInterval.End = _intervalStart;
                     _gs.ManualSearchInterval.Start = (int) p.X;
                 }
             }
@@ -106,18 +106,18 @@ namespace Diff.Manipulators
 
             if (mouseButtonEventArgs.ChangedButton == MouseButton.Left)
             {
-                if (_selectedInterval != null)
+                if (SelectedInterval != null)
                 {
-                    _selectedInterval.Selected = false;
-                    _selectedInterval = null;
+                    SelectedInterval.Selected = false;
+                    SelectedInterval = null;
                 }
 
                 for (var i = 0; i < _gs.SearchIntervalsLength; ++i)
                 {
                     if ((_gs.SearchIntervals[i].Start <= p.X) && (_gs.SearchIntervals[i].End >= p.X))
                     {
-                        _selectedInterval = _gs.SearchIntervals[i];
-                        _selectedInterval.Selected = true;
+                        SelectedInterval = _gs.SearchIntervals[i];
+                        SelectedInterval.Selected = true;
                         break;
                     }
                 }
@@ -127,7 +127,10 @@ namespace Diff.Manipulators
                 if (_gs.ManualSearchInterval != null)
                 {
                     _gs.ManualSearchInterval.Selected = false;
+                    SelectedInterval = null;
                 }
+
+                _intervalStart = (int) p.X;
 
                 _gs.ManualSearchInterval = null;
                 _gs.ClearSearchIntervals();

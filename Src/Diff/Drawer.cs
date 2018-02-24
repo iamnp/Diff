@@ -206,6 +206,20 @@ namespace Diff
 
             dc.Pop();
             DrawUpperScale(dc);
+
+            DrawSelectedIntervalLength(dc);
+        }
+
+        private void DrawSelectedIntervalLength(DrawingContext dc)
+        {
+            if (_manipulator.SearcnIntervalManipulator.SelectedInterval != null)
+            {
+                var len = _manipulator.SearcnIntervalManipulator.SelectedInterval.End -
+                          _manipulator.SearcnIntervalManipulator.SelectedInterval.Start;
+                var ft = new FormattedText("Δn = " + len.ToString("D"), CultureInfo.CurrentCulture,
+                    FlowDirection.LeftToRight, new Typeface("Arial"), 12, Brushes.Black);
+                dc.DrawText(ft, new Point(0, 0));
+            }
         }
 
         private void DrawUpperScale(DrawingContext dc)
