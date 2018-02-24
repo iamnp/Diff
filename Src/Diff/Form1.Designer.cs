@@ -32,6 +32,7 @@
             this.button4 = new System.Windows.Forms.Button();
             this.elementHost1 = new System.Windows.Forms.Integration.ElementHost();
             this.button2 = new System.Windows.Forms.Button();
+            this.button3 = new System.Windows.Forms.Button();
             this.searchTextBox = new Diff.CueTextBox();
             this.expressionEditor1 = new Diff.Editor.ExpressionEditor();
             this.SuspendLayout();
@@ -77,6 +78,16 @@
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(94, 532);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(75, 23);
+            this.button3.TabIndex = 9;
+            this.button3.Text = "Test 3";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
+            // 
             // searchTextBox
             // 
             this.searchTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -92,10 +103,10 @@
             // 
             this.expressionEditor1.AutoScroll = true;
             this.expressionEditor1.AutoScrollMinSize = new System.Drawing.Size(25, 50);
-            this.expressionEditor1.Location = new System.Drawing.Point(0, 36);
+            this.expressionEditor1.Location = new System.Drawing.Point(0, 56);
             this.expressionEditor1.Name = "expressionEditor1";
             this.expressionEditor1.SelectedText = "";
-            this.expressionEditor1.Size = new System.Drawing.Size(492, 491);
+            this.expressionEditor1.Size = new System.Drawing.Size(492, 471);
             this.expressionEditor1.TabIndex = 0;
             this.expressionEditor1.TextChanged += new System.EventHandler(this.expressionEditor1_TextChanged);
             // 
@@ -103,7 +114,9 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(984, 623);
+            this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.searchTextBox);
             this.Controls.Add(this.elementHost1);
@@ -126,6 +139,7 @@
         private System.Windows.Forms.Integration.ElementHost elementHost1;
         private CueTextBox searchTextBox;
         private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button button3;
     }
 }
 

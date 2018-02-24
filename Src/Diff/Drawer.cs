@@ -34,6 +34,7 @@ namespace Diff
         private Point[] _initialPoints;
         private double?[] _initialValues;
         public Rect HostRect;
+        public int VerticalScroll = 0;
 
         public Drawer(GlobalScope gs, MainGraphicOutput mainGraphics, Manipulator manipulator)
         {
@@ -143,7 +144,8 @@ namespace Diff
 
                                 var v = yPoint;
                                 yPoint *= -ExpressionEditor.LineHeight / 2.0;
-                                yPoint += i * ExpressionEditor.LineHeight + ExpressionEditor.LineHeight / 2;
+                                yPoint += i * ExpressionEditor.LineHeight + ExpressionEditor.LineHeight / 2 -
+                                          VerticalScroll;
                                 var p = new Point(j, yPoint);
                                 DrawPath(p);
                                 if (!set)
@@ -164,7 +166,8 @@ namespace Diff
 
                             var v = yPoint;
                             yPoint *= -ExpressionEditor.LineHeight / 2.0;
-                            yPoint += i * ExpressionEditor.LineHeight + ExpressionEditor.LineHeight / 2;
+                            yPoint += i * ExpressionEditor.LineHeight + ExpressionEditor.LineHeight / 2 -
+                                      VerticalScroll;
                             var p = new Point(j, yPoint);
                             DrawPath(p);
                             if (!set)
@@ -177,7 +180,7 @@ namespace Diff
                     }
                 }
 
-                StopPath(dc, new Rect(0, i * ExpressionEditor.LineHeight, _mainGraphics.ActualWidth,
+                StopPath(dc, new Rect(0, i * ExpressionEditor.LineHeight - VerticalScroll, _mainGraphics.ActualWidth,
                     ExpressionEditor.LineHeight));
                 if ((value != null) && (_manipulator.InitialValueManipulator.MouseX > LeftOffset))
                 {
@@ -185,12 +188,13 @@ namespace Diff
                         FlowDirection.LeftToRight, new Typeface("Arial"), 12, Brushes.Black);
                     dc.DrawText(ft,
                         new Point(_manipulator.InitialValueManipulator.MouseX + 4 - LeftOffset,
-                            (i + 1) * ExpressionEditor.LineHeight - ft.Height - 3));
+                            (i + 1) * ExpressionEditor.LineHeight - ft.Height - 3 - VerticalScroll));
                 }
 
-                dc.DrawLine(_blackPen, new Point(0, (float) (i + 1) * ExpressionEditor.LineHeight), new Point(
-                    _mainGraphics.ActualWidth,
-                    (float) (i + 1) * ExpressionEditor.LineHeight));
+                dc.DrawLine(_blackPen,
+                    new Point(-LeftOffset, (float) (i + 1) * ExpressionEditor.LineHeight - VerticalScroll), new Point(
+                        _mainGraphics.ActualWidth,
+                        (float) (i + 1) * ExpressionEditor.LineHeight - VerticalScroll));
             }
 
             DrawSearchIntervals(dc);

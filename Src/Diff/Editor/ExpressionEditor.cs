@@ -85,7 +85,7 @@ namespace Diff.Editor
             SetStyle(ControlStyles.ResizeRedraw, true);
 
             SetNewText("");
-            VerticalScroll.SmallChange = LineHeight;
+            VerticalScroll.SmallChange = 1;
         }
 
         public string SelectedText
@@ -664,6 +664,8 @@ namespace Diff.Editor
             AutoScrollMinSize += new Size(1, 0);
 
             PosCaret();
+
+            base.OnScroll(se);
         }
 
         private void ScrollUp(int lines)
