@@ -37,6 +37,7 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
@@ -46,6 +47,18 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Reductions\CodeEditing\CodeEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Reductions\CodeEditing\CodeEditor.Designer.cs">
+      <DependentUpon>CodeEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reductions\CodeEditing\HighlightingRange.cs" />
+    <Compile Include="Reductions\CodeEditing\HighlightingRule.cs" />
+    <Compile Include="Reductions\CodeEditing\LineMarker.cs" />
+    <Compile Include="Reductions\CodeEditing\Position.cs" />
+    <Compile Include="Reductions\CodeEditing\Selection.cs" />
+    <Compile Include="Reductions\CodeEditing\WinApi.cs" />
     <Compile Include="CueTextBox.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -79,6 +92,14 @@
     <Compile Include="Manipulators\Manipulator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Reductions\Reduction.cs" />
+    <Compile Include="Reductions\ReductionCompiler.cs" />
+    <Compile Include="Reductions\ReductionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Reductions\ReductionForm.Designer.cs">
+      <DependentUpon>ReductionForm.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
@@ -91,6 +112,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Reductions\ReductionForm.resx">
+      <DependentUpon>ReductionForm.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -104,6 +128,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -4,10 +4,16 @@ using System.Windows;
 using System.Windows.Forms;
 using Diff.Expressions;
 using Diff.Manipulators;
+using Diff.Reductions;
 
 // === FEATURES ===
-// TODO добавить редукции над интервалами (mean, max, min) с run-time compilation
-// TODO добавить свои кастомные редукции
+// TODO добавить редукции над интервалами (mean, max, min) с run-time compilation:
+// TODO     добавить компиляцию в фоне
+// TODO     добавить add/remove для пользовательских редукций (с шаблоном!)
+// TODO     добавить выполнение редукции через perform
+// TODO     написать unit-testов для редукций
+// TODO     интегрировать окно редукций в основное окно
+
 // TODO добавить подсказки при использовании
 
 // === FIXES ===
@@ -121,6 +127,11 @@ namespace Diff
         {
             expressionEditor1.Text =
                 "a = -0.9\r\nb = -0.8\r\nc = -0.7\r\nd = -0.6\r\ne = -0.5\r\nf = -0.4\r\ng = -0.3\r\nh = -0.2\r\ni = -0.1\r\nj = 0\r\nk = 0.1\r\nl = 0.2\r\nm = 0.3\r\nn = 0.4\r\no = 0.5\r\np = 0.6\r\nq = 0.7\r\nr = 0.8\r\ns = 0.9";
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            new ReductionForm().Show(this);
         }
     }
 }

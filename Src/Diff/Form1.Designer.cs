@@ -35,6 +35,7 @@
             this.button3 = new System.Windows.Forms.Button();
             this.searchTextBox = new Diff.CueTextBox();
             this.expressionEditor1 = new Diff.Editor.ExpressionEditor();
+            this.button5 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // button1
@@ -110,12 +111,23 @@
             this.expressionEditor1.TabIndex = 0;
             this.expressionEditor1.TextChanged += new System.EventHandler(this.expressionEditor1_TextChanged);
             // 
+            // button5
+            // 
+            this.button5.Location = new System.Drawing.Point(94, 561);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(75, 23);
+            this.button5.TabIndex = 10;
+            this.button5.Text = "Test 4";
+            this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(984, 623);
+            this.Controls.Add(this.button5);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.searchTextBox);
@@ -140,6 +152,7 @@
         private CueTextBox searchTextBox;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button button5;
     }
 }
 
