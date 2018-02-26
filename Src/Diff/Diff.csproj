@@ -92,8 +92,12 @@
     <Compile Include="Manipulators\Manipulator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Reductions\Compilation\CompilationErrorEventArgs.cs" />
+    <Compile Include="Reductions\Compilation\CompilationErrorHandler.cs" />
+    <Compile Include="Reductions\Compilation\CompiledEventArgs.cs" />
+    <Compile Include="Reductions\Compilation\CompiledHandler.cs" />
     <Compile Include="Reductions\Reduction.cs" />
-    <Compile Include="Reductions\ReductionCompiler.cs" />
+    <Compile Include="Reductions\Compilation\ReductionCompiler.cs" />
     <Compile Include="Reductions\ReductionForm.cs">
       <SubType>Form</SubType>
     </Compile>

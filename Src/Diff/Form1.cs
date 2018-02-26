@@ -8,7 +8,6 @@ using Diff.Reductions;
 
 // === FEATURES ===
 // TODO добавить редукции над интервалами (mean, max, min) с run-time compilation:
-// TODO     добавить компиляцию в фоне
 // TODO     добавить add/remove для пользовательских редукций (с шаблоном!)
 // TODO     добавить выполнение редукции через perform
 // TODO     написать unit-testов для редукций
