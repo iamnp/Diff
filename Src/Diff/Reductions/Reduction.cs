@@ -1,10 +1,11 @@
 ﻿using System.Reflection;
+using Diff.Expressions;
 
 namespace Diff.Reductions
 {
     internal class Reduction
     {
-        private MethodInfo _method;
+        private readonly MethodInfo _method;
 
         public Reduction(MethodInfo method, string name, string code)
         {
@@ -16,10 +17,15 @@ namespace Diff.Reductions
         public string Code { get; }
         public string Name { get; }
 
-        public double Perform()
+        public double Perform(GlobalScope.SearchInterval interval, AssignmentStatement statement)
         {
-            // TODO call method and return computed reduction
-            return 1;
+            var v = new double[interval.End - interval.Start + 1];
+            for (var i = interval.Start; i <= interval.End; ++i)
+            {
+                v[i - interval.Start] = statement.Assignee.NthItem(i).AsDouble;
+            }
+
+            return (double) _method.Invoke(null, new object[] {v});
         }
 
         public override string ToString()
