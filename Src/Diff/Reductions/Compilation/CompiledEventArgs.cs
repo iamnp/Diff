@@ -2,7 +2,7 @@
 
 namespace Diff.Reductions.Compilation
 {
-    internal class CompiledEventArgs : EventArgs
+    public class CompiledEventArgs : EventArgs
     {
         public CompiledEventArgs(Reduction reduction)
         {

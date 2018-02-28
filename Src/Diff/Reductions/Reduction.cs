@@ -3,7 +3,7 @@ using Diff.Expressions;
 
 namespace Diff.Reductions
 {
-    internal class Reduction
+    public class Reduction
     {
         private readonly MethodInfo _method;
 
@@ -22,7 +22,7 @@ namespace Diff.Reductions
             var v = new double[interval.End - interval.Start + 1];
             for (var i = interval.Start; i <= interval.End; ++i)
             {
-                v[i - interval.Start] = statement.Assignee.NthItem(i).AsDouble;
+                v[i - interval.Start] = statement.Assignee.Parent.NthItem(i - 1).AsDouble;
             }
 
             return (double) _method.Invoke(null, new object[] {v});

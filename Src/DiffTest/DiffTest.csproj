@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="AssignmentStatementTest.cs" />
     <Compile Include="ExpressionTest.cs" />
+    <Compile Include="ReductionsTest.cs" />
     <Compile Include="GlobalScopeTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

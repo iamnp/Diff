@@ -6,7 +6,7 @@ using Microsoft.CSharp;
 
 namespace Diff.Reductions.Compilation
 {
-    internal class ReductionCompiler
+    public class ReductionCompiler
     {
         public const string ClassName = "Reduction";
         public const string MethodName = "perform";
@@ -72,10 +72,11 @@ public static double " + MethodName + @"(double[] selection) {{
             if (results.Errors.Count == 0)
             {
                 compiledSuccessfully = true;
+                var method = results.CompiledAssembly.GetType(ClassName)
+                    .GetMethod(MethodName, BindingFlags.Static | BindingFlags.Public);
                 _synchronizationContext.Send(
                     o => Compiled?.Invoke(this, new CompiledEventArgs(new Reduction(
-                        results.CompiledAssembly.GetType(ClassName).GetMethod(MethodName, BindingFlags.Static), name,
-                        methodCode))), null);
+                        method, name, methodCode))), null);
             }
 
             if (!compiledSuccessfully)

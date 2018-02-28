@@ -2,7 +2,7 @@
 
 namespace Diff.Reductions.Compilation
 {
-    internal class CompilationErrorEventArgs : EventArgs
+    public class CompilationErrorEventArgs : EventArgs
     {
         public CompilationErrorEventArgs(int line, string errorText)
         {
