@@ -216,10 +216,9 @@ namespace Diff
 
         private void DrawSelectedIntervalLength(DrawingContext dc)
         {
-            if (_manipulator.SearcnIntervalManipulator.SelectedInterval != null)
+            if (_gs.SelectedInterval != null)
             {
-                var len = _manipulator.SearcnIntervalManipulator.SelectedInterval.End -
-                          _manipulator.SearcnIntervalManipulator.SelectedInterval.Start;
+                var len = _gs.SelectedInterval.End - _gs.SelectedInterval.Start;
                 var ft = new FormattedText("Δn = " + len.ToString("D"), CultureInfo.CurrentCulture,
                     FlowDirection.LeftToRight, new Typeface("Arial"), 12, Brushes.Black);
                 dc.DrawText(ft, new Point(0, 0));
@@ -257,6 +256,20 @@ namespace Diff
                         : (_gs.SearchIntervals[i].Hovered ? _hoveredSearchAreaBrush : _searchAreaBrush), null,
                     new Rect(new Point(_gs.SearchIntervals[i].Start, 0),
                         new Point(_gs.SearchIntervals[i].End - 1, _mainGraphics.ActualHeight)));
+            }
+
+            if (_gs.ReductionValues.Count > 0)
+            {
+                for (var i = 0; i < _gs.AssignmentStatements.Count; ++i)
+                {
+                    var ft = new FormattedText(
+                        _gs.ReductionForm.SelectedReduction.Name + ": " + _gs.ReductionValues[i].ToString("F2"),
+                        CultureInfo.CurrentCulture,
+                        FlowDirection.LeftToRight, new Typeface("Arial"), 12, Brushes.Black);
+                    dc.DrawText(ft,
+                        new Point(_gs.SelectedInterval.End + 2,
+                            (i + 1) * ExpressionEditor.LineHeight - 2 * ft.Height - 3 - VerticalScroll));
+                }
             }
         }
 

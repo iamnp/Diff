@@ -2,6 +2,7 @@
 using System.Drawing;
 using Diff.Editor;
 using Diff.Expressions.LowLevel;
+using Diff.Reductions;
 
 namespace Diff.Expressions
 {
@@ -13,9 +14,18 @@ namespace Diff.Expressions
         private readonly AssignmentStatement _searchStatement = new AssignmentStatement();
         public readonly List<AssignmentStatement> AssignmentStatements = new List<AssignmentStatement>();
         public readonly Dictionary<string, Variable> Globals = new Dictionary<string, Variable>();
+        public readonly ReductionForm ReductionForm;
+        public readonly List<double> ReductionValues = new List<double>();
         public readonly List<SearchInterval> SearchIntervals = new List<SearchInterval>();
         public SearchInterval ManualSearchInterval;
+
+        public GlobalScope(ReductionForm reductionForm = null)
+        {
+            ReductionForm = reductionForm;
+        }
+
         public int SearchIntervalsLength { get; private set; }
+        public SearchInterval SelectedInterval { get; set; }
 
         public void ClearSearchIntervals()
         {
@@ -107,7 +117,22 @@ namespace Diff.Expressions
 
             UpdateSearchIntervals();
 
+            EvaluateReduction();
+
             return null;
+        }
+
+        public void EvaluateReduction()
+        {
+            ReductionValues.Clear();
+            if ((SelectedInterval != null) && (ReductionForm.SelectedReduction != null))
+            {
+                for (var i = 0; i < AssignmentStatements.Count; ++i)
+                {
+                    ReductionValues.Add(
+                        ReductionForm.SelectedReduction.Perform(SelectedInterval, AssignmentStatements[i]));
+                }
+            }
         }
 
         public void UpdateSearchIntervals()

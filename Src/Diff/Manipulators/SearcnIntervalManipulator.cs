@@ -25,8 +25,6 @@ namespace Diff.Manipulators
             _mainGraphics.MouseUp += MainGraphicsOnMouseUp;
         }
 
-        public GlobalScope.SearchInterval SelectedInterval { get; set; }
-
         private void MainGraphicsOnMouseUp(object sender, MouseButtonEventArgs mouseButtonEventArgs)
         {
             var p = mouseButtonEventArgs.GetPosition(_mainGraphics);
@@ -58,7 +56,7 @@ namespace Diff.Manipulators
                         End = _intervalStart,
                         Selected = true
                     };
-                    SelectedInterval = _gs.ManualSearchInterval;
+                    _gs.SelectedInterval = _gs.ManualSearchInterval;
                     _gs.ClearSearchIntervals();
                     _gs.UpdateSearchIntervals();
                 }
@@ -73,6 +71,8 @@ namespace Diff.Manipulators
                     _gs.ManualSearchInterval.End = _intervalStart;
                     _gs.ManualSearchInterval.Start = (int) p.X;
                 }
+
+                _gs.EvaluateReduction();
             }
 
             if ((mouseEventArgs.RightButton == MouseButtonState.Released) &&
@@ -106,18 +106,18 @@ namespace Diff.Manipulators
 
             if (mouseButtonEventArgs.ChangedButton == MouseButton.Left)
             {
-                if (SelectedInterval != null)
+                if (_gs.SelectedInterval != null)
                 {
-                    SelectedInterval.Selected = false;
-                    SelectedInterval = null;
+                    _gs.SelectedInterval.Selected = false;
+                    _gs.SelectedInterval = null;
                 }
 
                 for (var i = 0; i < _gs.SearchIntervalsLength; ++i)
                 {
                     if ((_gs.SearchIntervals[i].Start <= p.X) && (_gs.SearchIntervals[i].End >= p.X))
                     {
-                        SelectedInterval = _gs.SearchIntervals[i];
-                        SelectedInterval.Selected = true;
+                        _gs.SelectedInterval = _gs.SearchIntervals[i];
+                        _gs.SelectedInterval.Selected = true;
                         break;
                     }
                 }
@@ -127,8 +127,10 @@ namespace Diff.Manipulators
                 if (_gs.ManualSearchInterval != null)
                 {
                     _gs.ManualSearchInterval.Selected = false;
-                    SelectedInterval = null;
+                    _gs.SelectedInterval = null;
                 }
+
+                _gs.EvaluateReduction();
 
                 _intervalStart = (int) p.X;
 

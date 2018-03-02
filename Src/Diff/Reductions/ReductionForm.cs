@@ -45,6 +45,19 @@ return max;";
             listBox1.SelectedIndex = 0;
         }
 
+        public Reduction SelectedReduction
+        {
+            get
+            {
+                if (listBox1.SelectedIndex < 0)
+                {
+                    return null;
+                }
+
+                return (Reduction) listBox1.Items[listBox1.SelectedIndex];
+            }
+        }
+
         private void ReductionCompilerOnCompilationError(object sender, CompilationErrorEventArgs e)
         {
             codeEditor1.RemoveAllMarkers();
