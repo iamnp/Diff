@@ -37,7 +37,6 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
@@ -53,6 +52,7 @@
     <Compile Include="InputForm.Designer.cs">
       <DependentUpon>InputForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Manipulators\ReductionsManipulator.cs" />
     <Compile Include="Reductions\CodeEditing\CodeEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -86,11 +86,11 @@
     <Compile Include="Expressions\LowLevel\Calculator.cs" />
     <Compile Include="Expressions\LowLevel\ParsedExpression.cs" />
     <Compile Include="Expressions\LowLevel\Variable.cs" />
-    <Compile Include="Form1.cs">
+    <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Manipulators\SearcnIntervalManipulator.cs" />
     <Compile Include="Manipulators\InitialValueManipulator.cs" />
@@ -110,8 +110,8 @@
     <Compile Include="Reductions\ReductionForm.Designer.cs">
       <DependentUpon>ReductionForm.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="InputForm.resx">
       <DependentUpon>InputForm.cs</DependentUpon>

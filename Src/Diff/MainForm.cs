@@ -7,8 +7,10 @@ using Diff.Manipulators;
 using Diff.Reductions;
 
 // === FEATURES ===
-// TODO вызывать форму редукций по клику
 // TODO протетсить и ИСПРАВИТЬ прокрутку (НЕ ВЕЗДЕ ЕСТЬ СДВИГ)
+
+// TODO добавить диффиринцирование
+// TODO добавить интегрирование
 
 // TODO добавить подсказки при использовании
 
@@ -26,15 +28,15 @@ namespace Diff
         private readonly Drawer _drawer;
         private readonly GlobalScope _gs;
         private readonly MainGraphicOutput _mainGraphics = new MainGraphicOutput();
-        private readonly ReductionForm _reductionForm;
 
         public MainForm()
         {
             InitializeComponent();
 
-            _reductionForm = new ReductionForm();
+            var reductionForm = new ReductionForm();
+            reductionForm.ReductionChanged += ReductionFormOnReductionChanged;
 
-            _gs = new GlobalScope(_reductionForm);
+            _gs = new GlobalScope(reductionForm);
 
             _mainGraphics.SizeChanged += MainGraphicsOnSizeChanged;
             elementHost1.Child = _mainGraphics;
@@ -43,6 +45,12 @@ namespace Diff
             _drawer = new Drawer(_gs, _mainGraphics, manipulator);
 
             expressionEditor1.Scroll += ExpressionEditor1OnScroll;
+        }
+
+        private void ReductionFormOnReductionChanged(object sender, EventArgs eventArgs)
+        {
+            _gs.EvaluateReduction();
+            _mainGraphics.InvalidateVisual();
         }
 
         private void ExpressionEditor1OnScroll(object sender, ScrollEventArgs scrollEventArgs)
@@ -132,7 +140,7 @@ namespace Diff
 
         private void button5_Click(object sender, EventArgs e)
         {
-            new ReductionForm().Show(this);
+            _gs.ReductionForm.Show();
         }
     }
 }

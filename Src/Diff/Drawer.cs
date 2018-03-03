@@ -258,6 +258,7 @@ namespace Diff
                         new Point(_gs.SearchIntervals[i].End - 1, _mainGraphics.ActualHeight)));
             }
 
+            _manipulator.ReductionsManipulator.RedutionValueRects.Clear();
             if (_gs.ReductionValues.Count > 0)
             {
                 for (var i = 0; i < _gs.AssignmentStatements.Count; ++i)
@@ -266,9 +267,19 @@ namespace Diff
                         _gs.ReductionForm.SelectedReduction.Name + ": " + _gs.ReductionValues[i].ToString("F2"),
                         CultureInfo.CurrentCulture,
                         FlowDirection.LeftToRight, new Typeface("Arial"), 12, Brushes.Black);
-                    dc.DrawText(ft,
-                        new Point(_gs.SelectedInterval.End + 2,
-                            (i + 1) * ExpressionEditor.LineHeight - 2 * ft.Height - 3 - VerticalScroll));
+                    var p1 = new Point(_gs.SelectedInterval.End + 2,
+                        (i + 1) * ExpressionEditor.LineHeight - 2 * ft.Height - 3 - VerticalScroll);
+                    dc.DrawText(ft, p1);
+
+                    var ft2 = new FormattedText("▼", CultureInfo.CurrentCulture,
+                        FlowDirection.LeftToRight, new Typeface("Arial"), 8, Brushes.Black);
+                    dc.DrawText(ft2,
+                        new Point(_gs.SelectedInterval.End + 3 + ft.Width,
+                            (i + 1) * ExpressionEditor.LineHeight - 2 * ft.Height - VerticalScroll));
+
+                    _manipulator.ReductionsManipulator.RedutionValueRects.Add(new Rect(
+                        new Point(p1.X + LeftOffset, p1.Y + TopOffset),
+                        new Point(p1.X + ft.Width + ft2.Width + 1 + LeftOffset, p1.Y + ft.Height + TopOffset)));
                 }
             }
         }

@@ -121,6 +121,8 @@ namespace Diff.Manipulators
                         break;
                     }
                 }
+
+                _gs.EvaluateReduction();
             }
             else if (mouseButtonEventArgs.ChangedButton == MouseButton.Right)
             {

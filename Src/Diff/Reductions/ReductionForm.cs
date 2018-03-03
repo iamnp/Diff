@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
@@ -10,19 +11,25 @@ namespace Diff.Reductions
     public partial class ReductionForm : Form
     {
         private const string MeanReduction = @"double sum = 0.0;
-for (int i = 0; i < selection.Length; ++i) {
+for (int i = 0;
+     i < selection.Length;
+     ++i) {
     sum += selection[i];
 }
 return sum/selection.Length;";
 
         private const string MinReduction = @"double min = selection[0];
-for (int i = 1; i < selection.Length; ++i) {
+for (int i = 1;
+     i < selection.Length;
+     ++i) {
     if (selection[i] < min) min = selection[i];
 }
 return min;";
 
         private const string MaxReduction = @"double max = selection[0];
-for (int i = 1; i < selection.Length; ++i) {
+for (int i = 1;
+     i < selection.Length;
+     ++i) {
     if (selection[i] > max) max = selection[i];
 }
 return max;";
@@ -58,6 +65,13 @@ return max;";
             }
         }
 
+        public event EventHandler ReductionChanged;
+
+        public void MoveBelowCursor()
+        {
+            Location = new Point(Cursor.Position.X - Width / 2, Cursor.Position.Y + 2);
+        }
+
         private void ReductionCompilerOnCompilationError(object sender, CompilationErrorEventArgs e)
         {
             codeEditor1.RemoveAllMarkers();
@@ -75,6 +89,7 @@ return max;";
             codeEditor1.TextChanged -= CodeEditor1OnTextChanged;
             listBox1.Items[listBox1.SelectedIndex] = e.Reduction;
             codeEditor1.TextChanged += CodeEditor1OnTextChanged;
+            ReductionChanged?.Invoke(this, EventArgs.Empty);
         }
 
         private void CodeEditor1OnTextChanged(object sender, EventArgs eventArgs)
@@ -122,6 +137,17 @@ return max;";
                 listBox1.Items.Add(new Reduction(null, form.InputText, MeanReduction));
                 listBox1.SelectedIndex = listBox1.Items.Count - 1;
             }
+        }
+
+        private void ReductionForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            e.Cancel = true;
+            Hide();
+        }
+
+        private void ReductionForm_Shown(object sender, EventArgs e)
+        {
+            Debug.WriteLine("JHErfE");
         }
     }
 }

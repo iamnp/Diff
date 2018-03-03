@@ -48,7 +48,7 @@ namespace Diff.Reductions
             this.listBox1.ItemHeight = 16;
             this.listBox1.Location = new System.Drawing.Point(0, 26);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(100, 148);
+            this.listBox1.Size = new System.Drawing.Size(100, 132);
             this.listBox1.TabIndex = 0;
             this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
             // 
@@ -76,29 +76,32 @@ namespace Diff.Reductions
             // 
             // codeEditor1
             // 
-            this.codeEditor1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.codeEditor1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.codeEditor1.AutoScroll = true;
             this.codeEditor1.AutoScrollMinSize = new System.Drawing.Size(21, 16);
             this.codeEditor1.Location = new System.Drawing.Point(100, 0);
             this.codeEditor1.Name = "codeEditor1";
             this.codeEditor1.SelectedText = "";
-            this.codeEditor1.Size = new System.Drawing.Size(406, 186);
+            this.codeEditor1.Size = new System.Drawing.Size(278, 160);
             this.codeEditor1.TabIndex = 1;
             // 
             // ReductionForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(506, 186);
+            this.ClientSize = new System.Drawing.Size(378, 160);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.codeEditor1);
             this.Controls.Add(this.listBox1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.Name = "ReductionForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Reductions";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ReductionForm_FormClosing);
+            this.Shown += new System.EventHandler(this.ReductionForm_Shown);
             this.ResumeLayout(false);
 
         }
