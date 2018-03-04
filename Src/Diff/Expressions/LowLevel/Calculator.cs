@@ -9,6 +9,7 @@ namespace Diff.Expressions.LowLevel
             <string, Func<Variable, Variable>>
             {
                 {"sqrt", a => Variable.Const(Math.Sqrt(a.AsDouble))},
+                {"not", a => Variable.Const(!a.AsBool)},
                 {"--", a => Variable.Const(-a.AsDouble)}
             };
 
@@ -49,6 +50,12 @@ namespace Diff.Expressions.LowLevel
                 },
                 {
                     '=', (a, b) => a.CopyValue(b)
+                },
+                {
+                    '?', (a, b) => Variable.Const(Math.Abs(a.AsDouble - b.AsDouble) < double.Epsilon)
+                },
+                {
+                    '#', (a, b) => Variable.Const(Math.Abs(a.AsDouble - b.AsDouble) >= double.Epsilon)
                 }
             };
 
@@ -57,6 +64,12 @@ namespace Diff.Expressions.LowLevel
             {
                 {
                     '=', 1
+                },
+                {
+                    '?', 1
+                },
+                {
+                    '#', 1
                 },
                 {
                     '>', 2

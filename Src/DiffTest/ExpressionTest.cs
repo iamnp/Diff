@@ -46,6 +46,33 @@ namespace DiffTest
         }
 
         [TestMethod]
+        public void TestEqualNotEqual()
+        {
+            var vars = new Dictionary<string, Variable>();
+
+            var pe = ParsedExpression.Parse("2 ? 2");
+            Assert.AreEqual(pe.Evaluate(vars, vars).AsBool, true);
+
+            pe = ParsedExpression.Parse("2 # 2");
+            Assert.AreEqual(pe.Evaluate(vars, vars).AsBool, false);
+        }
+
+        [TestMethod]
+        public void TestNegation()
+        {
+            var vars = new Dictionary<string, Variable>();
+
+            var pe = ParsedExpression.Parse("not(2 ? 2)");
+            Assert.AreEqual(pe.Evaluate(vars, vars).AsBool, false);
+
+            pe = ParsedExpression.Parse("not(2 # 2)");
+            Assert.AreEqual(pe.Evaluate(vars, vars).AsBool, true);
+
+            pe = ParsedExpression.Parse("not(not(2 # 2)) ? (2 # 2)");
+            Assert.AreEqual(pe.Evaluate(vars, vars).AsBool, true);
+        }
+
+        [TestMethod]
         public void TestSimpleVariables()
         {
             var globals = new Dictionary<string, Variable>
