@@ -22,7 +22,8 @@ namespace Diff.Reductions
             var v = new double[interval.End - interval.Start + 1];
             for (var i = interval.Start; i <= interval.End; ++i)
             {
-                v[i - interval.Start] = statement.Assignee.Parent.NthItem(i - 1).AsDouble;
+                v[i - interval.Start] =
+                    statement.Assignee.Parent?.NthItem(i - 1).AsDouble ?? statement.Assignee.AsDouble;
             }
 
             return (double) _method.Invoke(null, new object[] {v});
