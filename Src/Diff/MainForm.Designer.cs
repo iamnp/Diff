@@ -40,7 +40,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(12, 533);
+            this.button1.Location = new System.Drawing.Point(12, 562);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(113, 23);
             this.button1.TabIndex = 2;
@@ -50,7 +50,7 @@
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(12, 562);
+            this.button4.Location = new System.Drawing.Point(12, 591);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(113, 23);
             this.button4.TabIndex = 5;
@@ -64,14 +64,14 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.elementHost1.Location = new System.Drawing.Point(492, 36);
             this.elementHost1.Name = "elementHost1";
-            this.elementHost1.Size = new System.Drawing.Size(492, 491);
+            this.elementHost1.Size = new System.Drawing.Size(492, 520);
             this.elementHost1.TabIndex = 6;
             this.elementHost1.Text = "elementHost1";
             this.elementHost1.Child = null;
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(131, 533);
+            this.button2.Location = new System.Drawing.Point(131, 562);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(113, 23);
             this.button2.TabIndex = 8;
@@ -81,7 +81,7 @@
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(250, 533);
+            this.button3.Location = new System.Drawing.Point(250, 562);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(113, 23);
             this.button3.TabIndex = 9;
@@ -91,7 +91,7 @@
             // 
             // button5
             // 
-            this.button5.Location = new System.Drawing.Point(369, 533);
+            this.button5.Location = new System.Drawing.Point(369, 562);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(113, 23);
             this.button5.TabIndex = 10;
@@ -117,7 +117,7 @@
             this.expressionEditor1.Location = new System.Drawing.Point(0, 56);
             this.expressionEditor1.Name = "expressionEditor1";
             this.expressionEditor1.SelectedText = "";
-            this.expressionEditor1.Size = new System.Drawing.Size(492, 471);
+            this.expressionEditor1.Size = new System.Drawing.Size(492, 500);
             this.expressionEditor1.TabIndex = 0;
             this.expressionEditor1.TextChanged += new System.EventHandler(this.expressionEditor1_TextChanged);
             // 
@@ -126,7 +126,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(984, 595);
+            this.ClientSize = new System.Drawing.Size(984, 622);
             this.Controls.Add(this.button5);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);

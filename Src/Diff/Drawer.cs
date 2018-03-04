@@ -125,6 +125,15 @@ namespace Diff
 
             for (var i = 0; i < _gs.AssignmentStatements.Count; ++i)
             {
+                var bottomLinePos = (float) (i + 1) * ExpressionEditor.LineHeight - VerticalScroll;
+
+                if (bottomLinePos < ExpressionEditor.LineHeight)
+                {
+                    dc.DrawLine(_blackPen, new Point(-LeftOffset, bottomLinePos),
+                        new Point(_mainGraphics.ActualWidth, bottomLinePos));
+                    continue;
+                }
+
                 double? value = null;
                 var set = false;
                 if (_gs.AssignmentStatements[i].Assignee != null)
@@ -191,10 +200,8 @@ namespace Diff
                             (i + 1) * ExpressionEditor.LineHeight - ft.Height - 3 - VerticalScroll));
                 }
 
-                dc.DrawLine(_blackPen,
-                    new Point(-LeftOffset, (float) (i + 1) * ExpressionEditor.LineHeight - VerticalScroll), new Point(
-                        _mainGraphics.ActualWidth,
-                        (float) (i + 1) * ExpressionEditor.LineHeight - VerticalScroll));
+                dc.DrawLine(_blackPen, new Point(-LeftOffset, bottomLinePos),
+                    new Point(_mainGraphics.ActualWidth, bottomLinePos));
             }
 
             DrawSearchIntervals(dc);
