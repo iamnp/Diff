@@ -10,7 +10,14 @@ namespace Diff.Expressions.LowLevel
             {
                 {"sqrt", a => Variable.Const(Math.Sqrt(a.AsDouble))},
                 {"not", a => Variable.Const(!a.AsBool)},
-                {"--", a => Variable.Const(-a.AsDouble)}
+                {"--", a => Variable.Const(-a.AsDouble)},
+                {
+                    "der", a =>
+                    {
+                        var n = a.IndexInArray;
+                        return Variable.Const(a.Parent.NthItem(n + 1).AsDouble - a.Parent.NthItem(n).AsDouble);
+                    }
+                }
             };
 
         public static readonly Dictionary<string, Func<Variable, Variable, Variable>> BinaryFunctions =

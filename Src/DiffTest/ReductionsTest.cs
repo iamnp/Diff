@@ -39,6 +39,8 @@ for (int i = 0; i < selection.Length; ++i) {
 }
 return sum/selection.Length;");
 
+            // indices 0 1 2 3 4 5 6 7 8 9  10
+            // values  1 2 3 4 5 6 7 8 9 10 11
             Assert.IsTrue(autoResetEvent.WaitOne());
             Assert.IsNotNull(reduction);
             Assert.AreEqual(6, reduction.Perform(interval, gs.AssignmentStatements[0]));

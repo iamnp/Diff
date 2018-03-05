@@ -96,7 +96,7 @@ namespace Diff.Expressions
             {
                 for (var i = 0; i < AssignmentStatements.Count; ++i)
                 {
-                    AssignmentStatements[i].Locals[NVar] = Variable.Const(j - 1);
+                    AssignmentStatements[i].Locals[NVar] = Variable.Const(j);
                     var errorMsg = AssignmentStatements[i].Evaluate(Globals);
                     if (errorMsg != null)
                     {
@@ -107,7 +107,7 @@ namespace Diff.Expressions
 
             for (var j = 0; j < Iterations; ++j)
             {
-                _searchStatement.Locals[NVar] = Variable.Const(j - 1);
+                _searchStatement.Locals[NVar] = Variable.Const(j);
                 var errorMsgg = _searchStatement.Evaluate(Globals);
                 if (errorMsgg != null)
                 {

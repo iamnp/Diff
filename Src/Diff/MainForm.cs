@@ -7,13 +7,12 @@ using Diff.Manipulators;
 using Diff.Reductions;
 
 // === FEATURES ===
-// TODO добавить диффиринцирование
-// TODO добавить интегрирование
 
 // === FIXES ===
 // TODO починить поломку при резком увелечнии или уменьшении первого параметра
 
 // === BACKLOG ===
+// TODO исправить не очень хорошую отрисовку в самом начале графика
 // TODO добавить подсказки при использовании
 // TODO хороший GUI
 // TODO понять почему криво считает (одинаковые интервалы -> разные значения редукций)
@@ -139,6 +138,11 @@ namespace Diff
         private void button5_Click(object sender, EventArgs e)
         {
             _gs.ReductionForm.Show();
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            expressionEditor1.Text = "a[n+1] = a[n]-0.05\r\nb[n] = der(a[n])";
         }
     }
 }

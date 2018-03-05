@@ -20,9 +20,9 @@ namespace DiffTest
             gs.Evaluate();
             Assert.AreEqual(gs.Globals["a"].IsArray, true);
             Assert.AreEqual(gs.Globals["a"].AsDouble, 1.0);
-            Assert.AreEqual(gs.Globals["a"].NthItem(0).AsDouble, 2.0);
-            Assert.AreEqual(gs.Globals["a"].NthItem(1).AsDouble, 3.0);
-            Assert.AreEqual(gs.Globals["a"].NthItem(2).AsDouble, 4.0);
+            Assert.AreEqual(gs.Globals["a"].NthItem(0).AsDouble, 1.0);
+            Assert.AreEqual(gs.Globals["a"].NthItem(1).AsDouble, 2.0);
+            Assert.AreEqual(gs.Globals["a"].NthItem(2).AsDouble, 3.0);
         }
 
         [TestMethod]
