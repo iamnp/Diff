@@ -2,20 +2,23 @@
 using System.Drawing;
 using System.Windows.Forms;
 using Diff.Editor;
+using Diff.Expressions;
 
 namespace Diff
 {
     internal partial class DebugForm : Form
     {
         private readonly ExpressionEditor _ee;
+        private readonly GlobalScope _gs;
         private readonly CueTextBox _searchBox;
 
-        public DebugForm(ExpressionEditor ee, CueTextBox searchBox)
+        public DebugForm(ExpressionEditor ee, CueTextBox searchBox, GlobalScope gs)
         {
             InitializeComponent();
 
             _ee = ee;
             _searchBox = searchBox;
+            _gs = gs;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -48,6 +51,43 @@ namespace Diff
         private void DebugForm_Shown(object sender, EventArgs e)
         {
             Location = new Point(0, 0);
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            var v = _gs.Globals[textBox1.Text];
+            richTextBox1.Text = "";
+            richTextBox1.AppendText("Name: " + v.Name + "\n");
+            richTextBox1.AppendText("IsBool: " + v.IsBool + "\n");
+            richTextBox1.AppendText("IsDouble: " + v.IsDouble + "\n");
+            richTextBox1.AppendText("IsEmpty: " + v.IsEmpty + "\n");
+            richTextBox1.AppendText("IsArray: " + v.IsArray + "\n");
+            richTextBox1.AppendText("IndexInArray: " + v.IndexInArray + "\n");
+            if (v.IsBool)
+            {
+                richTextBox1.AppendText("Bool: " + v.AsBool + "\n");
+            }
+
+            if (v.IsDouble)
+            {
+                richTextBox1.AppendText("Double: " + v.AsDouble + "\n");
+            }
+
+            if (v.Parent != null)
+            {
+                richTextBox1.AppendText("Parent: " + v.Parent.Name + "\n");
+            }
+
+            if (v.IsArray)
+            {
+                var s = "";
+                for (var i = 0; i < GlobalScope.Iterations; ++i)
+                {
+                    s += v.NthItem(i).AsDouble + " ";
+                }
+
+                richTextBox1.AppendText("Array: " + s + "\n");
+            }
         }
     }
 }

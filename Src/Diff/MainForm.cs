@@ -30,14 +30,14 @@ namespace Diff
         {
             InitializeComponent();
 
-#if DEBUG
-            new DebugForm(expressionEditor1, searchTextBox).Show();
-#endif
-
             var reductionForm = new ReductionForm();
             reductionForm.ReductionChanged += ReductionFormOnReductionChanged;
 
             _gs = new GlobalScope(reductionForm);
+
+#if DEBUG
+            new DebugForm(expressionEditor1, searchTextBox, _gs).Show();
+#endif
 
             _mainGraphics.SizeChanged += MainGraphicsOnSizeChanged;
             elementHost1.Child = _mainGraphics;
