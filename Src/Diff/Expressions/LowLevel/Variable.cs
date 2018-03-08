@@ -48,8 +48,7 @@ namespace Diff.Expressions.LowLevel
 
             if (_data.Array == null)
             {
-                _data.Array = new List<Variable>();
-                _data.Array.Add(Empty(null, this, 0).CopyScalarValue(this));
+                _data.Array = new List<Variable> {Empty(null, this, 0).CopyScalarValue(this)};
             }
 
             while (_data.Array.Count < n + 1)

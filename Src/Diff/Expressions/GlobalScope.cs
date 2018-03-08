@@ -86,6 +86,7 @@ namespace Diff.Expressions
             }
 
             var.SetDoubleValue(v);
+            var.NthItem(0).SetDoubleValue(v);
         }
 
         public LineMarker Evaluate()
