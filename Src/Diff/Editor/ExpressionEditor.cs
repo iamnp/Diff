@@ -547,7 +547,7 @@ namespace Diff.Editor
             _selection.End = IndexToCharPos(_manipulatingSelectionStop + 1);
 
             _manipulatorOriginX = _initialMouseXPos - ManipulatorWidth / 2;
-            _manipulatorOriginY = shiftY + _selection.End.Line * LineHeight - ManipulatorHeight;
+            _manipulatorOriginY = shiftY + _selection.End.Line * LineHeight - ManipulatorHeight + 14;
             Cursor = Cursors.Arrow;
             return true;
         }
