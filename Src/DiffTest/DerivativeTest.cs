@@ -19,9 +19,10 @@ namespace DiffTest
             gs.AssignmentStatements[1].SetExprString("b[n] = der(a[n])");
             gs.Evaluate();
 
-            Assert.AreEqual(gs.Globals["b"].NthItem(0).AsDouble, 0.5454, 0.000001);
+            Assert.AreEqual(gs.Globals["b"].NthItem(0).AsDouble, 0, 0.000001);
             Assert.AreEqual(gs.Globals["b"].NthItem(1).AsDouble, 0.5454, 0.000001);
             Assert.AreEqual(gs.Globals["b"].NthItem(2).AsDouble, 0.5454, 0.000001);
+            Assert.AreEqual(gs.Globals["b"].NthItem(3).AsDouble, 0.5454, 0.000001);
         }
     }
 }

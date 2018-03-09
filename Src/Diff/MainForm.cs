@@ -6,12 +6,6 @@ using Diff.Expressions;
 using Diff.Manipulators;
 using Diff.Reductions;
 
-// === FEATURES ===
-
-// === FIXES ===
-// TODO починить поломку при резком увелечнии или уменьшении первого параметра
-
-// === BACKLOG ===
 // TODO исправить не очень хорошую отрисовку в самом начале графика
 // TODO добавить подсказки при использовании
 // TODO хороший GUI
