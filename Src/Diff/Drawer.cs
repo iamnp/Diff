@@ -342,7 +342,7 @@ namespace Diff
             {
                 for (var i = 0; i < initialPoints.Length; ++i)
                 {
-                    var y = initialPoints[i].Y;
+                    var y = initialPoints[i].Y + VerticalScroll;
                     if (y > ExpressionEditor.LineHeight * (i + 1))
                     {
                         y = ExpressionEditor.LineHeight * (i + 1);
@@ -354,7 +354,7 @@ namespace Diff
                     }
 
                     var dx = initialPoints[i].X - _manipulator.InitialValueManipulator.MouseX + LeftOffset - 10;
-                    var dy = y - (_manipulator.InitialValueManipulator.MouseY - TopOffset);
+                    var dy = y - (_manipulator.InitialValueManipulator.MouseY - TopOffset) - VerticalScroll;
                     var newDist = dx * dx + dy * dy;
                     if ((newDist < bestDist) || (bestIndex == -1))
                     {
@@ -363,7 +363,7 @@ namespace Diff
                     }
                 }
 
-                if (bestDist > 350)
+                if (bestDist > 300)
                 {
                     return;
                 }
@@ -383,7 +383,7 @@ namespace Diff
 
             var ft = new FormattedText(initialValues[bestIndex].Value.ToString("F2"), CultureInfo.CurrentCulture,
                 FlowDirection.LeftToRight, new Typeface("Arial"), 12, Brushes.Black);
-            var yy = initialPoints[bestIndex].Y;
+            var yy = initialPoints[bestIndex].Y + VerticalScroll;
             if (yy > ExpressionEditor.LineHeight * (bestIndex + 1))
             {
                 yy = ExpressionEditor.LineHeight * (bestIndex + 1);
@@ -394,7 +394,7 @@ namespace Diff
                 yy = ExpressionEditor.LineHeight * bestIndex;
             }
 
-            var textPoint = new Point(LeftOffset - ft.Width - 2 - 3, yy - ft.Height / 2 - 2);
+            var textPoint = new Point(LeftOffset - ft.Width - 2 - 3, yy - ft.Height / 2 - 2 - VerticalScroll);
             var rectPoint = new Point(textPoint.X - 3, textPoint.Y - 2);
             _manipulator.InitialValueManipulator.InitialValueManipulatorRect =
                 new Rect(rectPoint, new Point(rectPoint.X + ft.Width + 6, rectPoint.Y + ft.Height + 4));
