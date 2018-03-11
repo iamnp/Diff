@@ -210,6 +210,11 @@ namespace Diff
             {
                 dc.DrawLine(_blackPen, new Point(_manipulator.InitialValueManipulator.MouseX - LeftOffset, 0),
                     new Point(_manipulator.InitialValueManipulator.MouseX - LeftOffset, _mainGraphics.ActualHeight));
+                var ft = new FormattedText((_manipulator.InitialValueManipulator.MouseX - LeftOffset).ToString(),
+                    CultureInfo.CurrentCulture,
+                    FlowDirection.LeftToRight, new Typeface("Arial"), 12, Brushes.Black);
+                dc.DrawText(ft,
+                    new Point(_manipulator.InitialValueManipulator.MouseX - LeftOffset + 4, 4));
             }
 
             dc.Pop();
@@ -225,7 +230,7 @@ namespace Diff
         {
             if (_gs.SelectedInterval != null)
             {
-                var len = _gs.SelectedInterval.End - _gs.SelectedInterval.Start;
+                var len = _gs.SelectedInterval.End - _gs.SelectedInterval.Start + 1;
                 var ft = new FormattedText("Δn = " + len.ToString("D"), CultureInfo.CurrentCulture,
                     FlowDirection.LeftToRight, new Typeface("Arial"), 12, Brushes.Black);
                 dc.DrawText(ft, new Point(0, 0));
@@ -262,7 +267,7 @@ namespace Diff
                         ? _selectedSearchAreaBrush
                         : (_gs.SearchIntervals[i].Hovered ? _hoveredSearchAreaBrush : _searchAreaBrush), null,
                     new Rect(new Point(_gs.SearchIntervals[i].Start, 0),
-                        new Point(_gs.SearchIntervals[i].End - 1, _mainGraphics.ActualHeight)));
+                        new Point(_gs.SearchIntervals[i].End, _mainGraphics.ActualHeight)));
             }
 
             _manipulator.ReductionsManipulator.RedutionValueRects.Clear();

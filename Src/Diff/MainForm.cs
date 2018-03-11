@@ -6,9 +6,8 @@ using Diff.Expressions;
 using Diff.Manipulators;
 using Diff.Reductions;
 
-// TODO добавить подсказки при использовании
 // TODO хороший GUI
-// TODO понять почему криво считает (одинаковые интервалы -> разные значения редукций)
+// TODO добавить подсказки при использовании
 // TODO посмотреть почему убывает последний график на тестах
 
 namespace Diff
