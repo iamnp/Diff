@@ -10,7 +10,7 @@ namespace Diff
 {
     internal class Drawer
     {
-        public const int LeftOffset = 50;
+        public const int LeftOffset = 42;
         public const int TopOffset = 20;
 
         private readonly Pen _blackPen = new Pen
@@ -19,13 +19,30 @@ namespace Diff
             Brush = Brushes.Black
         };
 
+        private readonly Pen _bottomLinePen = new Pen
+        {
+            Thickness = 1,
+            Brush = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0))
+        };
+
+        private readonly Brush _graphFillBrush = new SolidColorBrush(Color.FromArgb(140, 160, 106, 58));
+
         private readonly GlobalScope _gs;
         private readonly Brush _hoveredSearchAreaBrush = new SolidColorBrush(Color.FromArgb(100, 0, 0, 0));
+        private readonly Brush _initialValueManipulatorColor = new SolidColorBrush(Color.FromRgb(255, 218, 122));
         private readonly MainGraphicOutput _mainGraphics;
         private readonly Manipulator _manipulator;
 
         private readonly List<Point> _points = new List<Point>();
-        private readonly Brush _searchAreaBrush = new SolidColorBrush(Color.FromArgb(60, 0, 0, 0));
+
+        private readonly Brush _rowBackgroundBrush =
+            new LinearGradientBrush(Color.FromRgb(255, 218, 122), Color.FromRgb(239, 176, 83), 90);
+
+        private readonly Brush _searchAreaBrush = new SolidColorBrush(Color.FromArgb(70, 200, 146, 98));
+
+        private readonly Pen _searchIntervalBorderPen =
+            new Pen(new SolidColorBrush(Color.FromArgb(190, 200, 146, 98)), 2);
+
         private readonly Brush _selectedSearchAreaBrush = new SolidColorBrush(Color.FromArgb(140, 0, 0, 0));
         private readonly Point _topLeftOffset = new Point(LeftOffset, TopOffset);
         private readonly Brush _whiteBrush = new SolidColorBrush(Colors.White);
@@ -50,6 +67,10 @@ namespace Diff
             _searchAreaBrush.Freeze();
             _selectedSearchAreaBrush.Freeze();
             _hoveredSearchAreaBrush.Freeze();
+            _rowBackgroundBrush.Freeze();
+            _graphFillBrush.Freeze();
+            _bottomLinePen.Freeze();
+            _searchIntervalBorderPen.Freeze();
 
             _mainGraphics.DrawingFunc = DrawScene;
         }
@@ -90,7 +111,7 @@ namespace Diff
                 var visibleRect = new RectangleGeometry(visible);
                 visibleRect.Freeze();
                 dc.PushClip(visibleRect);
-                dc.DrawGeometry(Brushes.LightGray, _blackPen, geometry);
+                dc.DrawGeometry(_graphFillBrush, null, geometry);
                 dc.Pop();
             }
 
@@ -129,10 +150,14 @@ namespace Diff
 
                 if (bottomLinePos < ExpressionEditor.LineHeight)
                 {
-                    dc.DrawLine(_blackPen, new Point(-LeftOffset, bottomLinePos),
+                    dc.DrawLine(_bottomLinePen, new Point(-LeftOffset, bottomLinePos),
                         new Point(_mainGraphics.ActualWidth, bottomLinePos));
                     continue;
                 }
+
+                dc.DrawRectangle(_rowBackgroundBrush, null,
+                    new Rect(new Point(0, i * ExpressionEditor.LineHeight - VerticalScroll),
+                        new Point(_mainGraphics.ActualWidth, (i + 1) * ExpressionEditor.LineHeight - VerticalScroll)));
 
                 double? value = null;
                 var set = false;
@@ -200,7 +225,7 @@ namespace Diff
                             (i + 1) * ExpressionEditor.LineHeight - ft.Height - 3 - VerticalScroll));
                 }
 
-                dc.DrawLine(_blackPen, new Point(-LeftOffset, bottomLinePos),
+                dc.DrawLine(_bottomLinePen, new Point(-LeftOffset, bottomLinePos),
                     new Point(_mainGraphics.ActualWidth, bottomLinePos));
             }
 
@@ -263,11 +288,14 @@ namespace Diff
         {
             for (var i = 0; i < _gs.SearchIntervalsLength; ++i)
             {
+                var leftTop = new Point(_gs.SearchIntervals[i].Start, 0);
+                var rightBottom = new Point(_gs.SearchIntervals[i].End, _mainGraphics.ActualHeight);
                 dc.DrawRectangle(_gs.SearchIntervals[i].Selected
                         ? _selectedSearchAreaBrush
                         : (_gs.SearchIntervals[i].Hovered ? _hoveredSearchAreaBrush : _searchAreaBrush), null,
-                    new Rect(new Point(_gs.SearchIntervals[i].Start, 0),
-                        new Point(_gs.SearchIntervals[i].End, _mainGraphics.ActualHeight)));
+                    new Rect(leftTop, rightBottom));
+                dc.DrawLine(_searchIntervalBorderPen, leftTop, new Point(leftTop.X, rightBottom.Y));
+                dc.DrawLine(_searchIntervalBorderPen, new Point(rightBottom.X, leftTop.Y), rightBottom);
             }
 
             _manipulator.ReductionsManipulator.RedutionValueRects.Clear();
@@ -325,7 +353,7 @@ namespace Diff
                         y = ExpressionEditor.LineHeight * i;
                     }
 
-                    var dx = initialPoints[i].X - _manipulator.InitialValueManipulator.MouseX + LeftOffset;
+                    var dx = initialPoints[i].X - _manipulator.InitialValueManipulator.MouseX + LeftOffset - 10;
                     var dy = y - (_manipulator.InitialValueManipulator.MouseY - TopOffset);
                     var newDist = dx * dx + dy * dy;
                     if ((newDist < bestDist) || (bestIndex == -1))
@@ -335,7 +363,7 @@ namespace Diff
                     }
                 }
 
-                if (bestDist > 400)
+                if (bestDist > 350)
                 {
                     return;
                 }
@@ -366,12 +394,13 @@ namespace Diff
                 yy = ExpressionEditor.LineHeight * bestIndex;
             }
 
-            var p1 = new Point(LeftOffset - ft.Width - 2, yy - ft.Height / 2);
+            var textPoint = new Point(LeftOffset - ft.Width - 2 - 3, yy - ft.Height / 2 - 2);
+            var rectPoint = new Point(textPoint.X - 3, textPoint.Y - 2);
             _manipulator.InitialValueManipulator.InitialValueManipulatorRect =
-                new Rect(p1, new Point(p1.X + ft.Width, p1.Y + ft.Height));
-            dc.DrawRoundedRectangle(Brushes.Aqua, null,
+                new Rect(rectPoint, new Point(rectPoint.X + ft.Width + 6, rectPoint.Y + ft.Height + 4));
+            dc.DrawRoundedRectangle(_initialValueManipulatorColor, null,
                 _manipulator.InitialValueManipulator.InitialValueManipulatorRect, 3, 3);
-            dc.DrawText(ft, p1);
+            dc.DrawText(ft, textPoint);
         }
     }
 }

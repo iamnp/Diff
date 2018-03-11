@@ -37,9 +37,9 @@
             // 
             this.elementHost1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.elementHost1.Location = new System.Drawing.Point(492, 36);
+            this.elementHost1.Location = new System.Drawing.Point(392, 36);
             this.elementHost1.Name = "elementHost1";
-            this.elementHost1.Size = new System.Drawing.Size(492, 520);
+            this.elementHost1.Size = new System.Drawing.Size(692, 520);
             this.elementHost1.TabIndex = 6;
             this.elementHost1.Text = "elementHost1";
             this.elementHost1.Child = null;
@@ -49,7 +49,7 @@
             this.searchTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.searchTextBox.CueText = "Search";
             this.searchTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.searchTextBox.Location = new System.Drawing.Point(808, 6);
+            this.searchTextBox.Location = new System.Drawing.Point(908, 6);
             this.searchTextBox.Name = "searchTextBox";
             this.searchTextBox.Size = new System.Drawing.Size(170, 22);
             this.searchTextBox.TabIndex = 7;
@@ -62,7 +62,7 @@
             this.expressionEditor1.Location = new System.Drawing.Point(0, 56);
             this.expressionEditor1.Name = "expressionEditor1";
             this.expressionEditor1.SelectedText = "";
-            this.expressionEditor1.Size = new System.Drawing.Size(492, 500);
+            this.expressionEditor1.Size = new System.Drawing.Size(392, 500);
             this.expressionEditor1.TabIndex = 0;
             this.expressionEditor1.TextChanged += new System.EventHandler(this.expressionEditor1_TextChanged);
             // 
@@ -71,7 +71,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(984, 556);
+            this.ClientSize = new System.Drawing.Size(1084, 556);
             this.Controls.Add(this.searchTextBox);
             this.Controls.Add(this.elementHost1);
             this.Controls.Add(this.expressionEditor1);
