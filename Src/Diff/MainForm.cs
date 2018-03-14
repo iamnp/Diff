@@ -8,7 +8,6 @@ using Diff.Reductions;
 
 // TODO хороший GUI
 // TODO добавить подсказки при использовании
-// TODO посмотреть почему убывает последний график на тестах
 
 namespace Diff
 {
