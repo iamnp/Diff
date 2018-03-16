@@ -11,12 +11,12 @@ namespace Diff.Expressions
         private const string SearchVar = "searched";
         public const string NVar = "n";
         public static int Iterations = 300;
-        private readonly AssignmentStatement _searchStatement = new AssignmentStatement();
         public readonly List<AssignmentStatement> AssignmentStatements = new List<AssignmentStatement>();
         public readonly Dictionary<string, Variable> Globals = new Dictionary<string, Variable>();
         public readonly ReductionForm ReductionForm;
         public readonly List<double> ReductionValues = new List<double>();
         public readonly List<SearchInterval> SearchIntervals = new List<SearchInterval>();
+        private AssignmentStatement _searchStatement;
         public SearchInterval ManualSearchInterval;
 
         public GlobalScope(ReductionForm reductionForm = null)
@@ -63,6 +63,17 @@ namespace Diff.Expressions
 
         public string Search(string expr)
         {
+            if (expr == "")
+            {
+                _searchStatement = null;
+                return null;
+            }
+
+            if (_searchStatement == null)
+            {
+                _searchStatement = new AssignmentStatement();
+            }
+
             return _searchStatement.SetExprString(SearchVar + "[" + NVar + "] = (" + expr + ")");
         }
 
@@ -106,13 +117,21 @@ namespace Diff.Expressions
                 }
             }
 
+
             for (var j = 0; j < Iterations; ++j)
             {
-                _searchStatement.Locals[NVar] = Variable.Const(j);
-                var errorMsgg = _searchStatement.Evaluate(Globals);
-                if (errorMsgg != null)
+                if (_searchStatement != null)
                 {
-                    return new LineMarker {Color = Color.Red, Line = -1, Text = errorMsgg};
+                    _searchStatement.Locals[NVar] = Variable.Const(j);
+                    var errorMsgg = _searchStatement.Evaluate(Globals);
+                    if (errorMsgg != null)
+                    {
+                        return new LineMarker {Color = Color.Red, Line = -1, Text = errorMsgg};
+                    }
+                }
+                else if (Globals.ContainsKey(SearchVar))
+                {
+                    Globals[SearchVar].NthItem(j).SetBoolValue(false);
                 }
             }
 

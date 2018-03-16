@@ -39,6 +39,11 @@ namespace Diff.Expressions.LowLevel
             _data.DoubleValue = v;
         }
 
+        public void SetBoolValue(bool v)
+        {
+            _data.BoolValue = v;
+        }
+
         public Variable NthItem(int n)
         {
             if (n < 0)
