@@ -10,7 +10,7 @@ namespace Diff
 {
     internal class Drawer
     {
-        public const int LeftOffset = 42;
+        public const int LeftOffset = 50;
         public const int TopOffset = 20;
 
         private readonly Pen _blackPen = new Pen
