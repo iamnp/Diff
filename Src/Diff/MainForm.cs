@@ -38,6 +38,8 @@ namespace Diff
             _drawer = new Drawer(_gs, _mainGraphics, manipulator);
 
             expressionEditor1.Scroll += ExpressionEditor1OnScroll;
+
+            expressionEditor1.Text = "a[n] = 0";
         }
 
         private void ReductionFormOnReductionChanged(object sender, EventArgs eventArgs)

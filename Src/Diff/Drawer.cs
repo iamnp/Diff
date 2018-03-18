@@ -146,11 +146,11 @@ namespace Diff
 
             for (var i = 0; i < _gs.AssignmentStatements.Count; ++i)
             {
-                var bottomLinePos = (float) (i + 1) * ExpressionEditor.LineHeight - VerticalScroll;
+                var bottomLinePos = (i + 1) * ExpressionEditor.LineHeight - VerticalScroll;
 
                 if (bottomLinePos < ExpressionEditor.LineHeight)
                 {
-                    dc.DrawLine(_bottomLinePen, new Point(-LeftOffset, bottomLinePos),
+                    dc.DrawLine(_bottomLinePen, new Point(0, bottomLinePos),
                         new Point(_mainGraphics.ActualWidth, bottomLinePos));
                     continue;
                 }
@@ -225,7 +225,7 @@ namespace Diff
                             (i + 1) * ExpressionEditor.LineHeight - ft.Height - 3 - VerticalScroll));
                 }
 
-                dc.DrawLine(_bottomLinePen, new Point(-LeftOffset, bottomLinePos),
+                dc.DrawLine(_bottomLinePen, new Point(0, bottomLinePos),
                     new Point(_mainGraphics.ActualWidth, bottomLinePos));
             }
 

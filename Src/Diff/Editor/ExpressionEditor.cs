@@ -1162,7 +1162,7 @@ namespace Diff.Editor
         #region Drawing routine
 
         private readonly Brush _backBrush = Brushes.White;
-        private readonly Pen _lineSelectorPen = new Pen(Color.FromArgb(255, 0, 0, 0), 1);
+        private readonly Pen _lineSelectorPen = new Pen(Color.White, 1);
         private readonly Color _defaultTextColor = Color.Black;
         private readonly Brush _selectionBrush = new SolidBrush(Color.FromArgb(200, 173, 214, 255));
         private readonly Brush _manipulatorBack = new SolidBrush(Color.Silver);
