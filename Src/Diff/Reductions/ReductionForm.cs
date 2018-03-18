@@ -86,9 +86,18 @@ return max;";
         private void ReductionCompilerOnCompiled(object sender, CompiledEventArgs e)
         {
             codeEditor1.RemoveAllMarkers();
-            codeEditor1.TextChanged -= CodeEditor1OnTextChanged;
-            listBox1.Items[listBox1.SelectedIndex] = e.Reduction;
-            codeEditor1.TextChanged += CodeEditor1OnTextChanged;
+
+            for (var i = 0; i < listBox1.Items.Count; i++)
+            {
+                if (((Reduction)listBox1.Items[i]).Name == e.Reduction.Name)
+                {
+                    codeEditor1.TextChanged -= CodeEditor1OnTextChanged;
+                    listBox1.Items[i] = e.Reduction;
+                    codeEditor1.TextChanged += CodeEditor1OnTextChanged;
+                    break;
+                }
+            }
+
             ReductionChanged?.Invoke(this, EventArgs.Empty);
         }
 
