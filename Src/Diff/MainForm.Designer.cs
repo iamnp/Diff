@@ -75,6 +75,7 @@
             this.Controls.Add(this.searchTextBox);
             this.Controls.Add(this.elementHost1);
             this.Controls.Add(this.expressionEditor1);
+            this.MinimumSize = new System.Drawing.Size(500, 300);
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Diff";
