@@ -22,7 +22,8 @@ return sum/selection.Length;";
 for (int i = 1;
      i < selection.Length;
      ++i) {
-    if (selection[i] < min) min = selection[i];
+    if (selection[i] < min)
+        min = selection[i];
 }
 return min;";
 
@@ -30,7 +31,8 @@ return min;";
 for (int i = 1;
      i < selection.Length;
      ++i) {
-    if (selection[i] > max) max = selection[i];
+    if (selection[i] > max)
+        max = selection[i];
 }
 return max;";
 
@@ -89,22 +91,30 @@ return max;";
 
             for (var i = 0; i < listBox1.Items.Count; i++)
             {
-                if (((Reduction)listBox1.Items[i]).Name == e.Reduction.Name)
+                if (((Reduction) listBox1.Items[i]).Name == e.Reduction.Name)
                 {
                     codeEditor1.TextChanged -= CodeEditor1OnTextChanged;
                     listBox1.Items[i] = e.Reduction;
                     codeEditor1.TextChanged += CodeEditor1OnTextChanged;
+                    ReductionChanged?.Invoke(this, EventArgs.Empty);
                     break;
                 }
             }
-
-            ReductionChanged?.Invoke(this, EventArgs.Empty);
         }
 
         private void CodeEditor1OnTextChanged(object sender, EventArgs eventArgs)
         {
-            var oldReduction = (Reduction) listBox1.Items[listBox1.SelectedIndex];
-            _reductionCompiler.Compile(oldReduction.Name, codeEditor1.Text);
+            if (codeEditor1.Text == "")
+            {
+                codeEditor1.Enabled = false;
+                ReductionChanged?.Invoke(this, EventArgs.Empty);
+            }
+            else
+            {
+                codeEditor1.Enabled = true;
+                var oldReduction = (Reduction) listBox1.Items[listBox1.SelectedIndex];
+                _reductionCompiler.Compile(oldReduction.Name, codeEditor1.Text);
+            }
         }
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -113,6 +123,10 @@ return max;";
             {
                 var r = (Reduction) listBox1.Items[listBox1.SelectedIndex];
                 codeEditor1.Text = r.Code;
+            }
+            else
+            {
+                codeEditor1.Text = "";
             }
         }
 
