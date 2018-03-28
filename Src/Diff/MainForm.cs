@@ -6,9 +6,7 @@ using Diff.Expressions;
 using Diff.Manipulators;
 using Diff.Reductions;
 
-// TODO добавить delta_n как перменную для вывода
-// TODO хороший GUI
-// TODO добавить подсказки при использовании
+// TODO исправить цвета при выделении
 
 namespace Diff
 {
