@@ -66,6 +66,8 @@ namespace Diff.Expressions
             if (expr == "")
             {
                 _searchStatement = null;
+                SelectedInterval = null;
+                SearchIntervals.Clear();
                 return null;
             }
 
