@@ -20,6 +20,11 @@ namespace Diff.Reductions
         public double Perform(GlobalScope.SearchInterval interval, AssignmentStatement statement)
         {
             var v = new double[interval.End - interval.Start + 1];
+            if (statement.Assignee == null)
+            {
+                return double.NaN;
+            }
+
             for (var i = interval.Start; i <= interval.End; ++i)
             {
                 v[i - interval.Start] =

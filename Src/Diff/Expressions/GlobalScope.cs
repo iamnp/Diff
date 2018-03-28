@@ -102,7 +102,7 @@ namespace Diff.Expressions
 
         public LineMarker Evaluate()
         {
-            ClearSearchIntervals();
+            LineMarker lineMarker = null;
 
             for (var j = 0; j < Iterations; ++j)
             {
@@ -112,7 +112,10 @@ namespace Diff.Expressions
                     var errorMsg = AssignmentStatements[i].Evaluate(Globals);
                     if (errorMsg != null)
                     {
-                        return new LineMarker {Color = Color.Red, Line = i + 1, Text = errorMsg};
+                        if (lineMarker == null)
+                        {
+                            lineMarker = new LineMarker {Color = Color.Red, Line = i + 1, Text = errorMsg};
+                        }
                     }
                 }
             }
@@ -126,7 +129,10 @@ namespace Diff.Expressions
                     var errorMsgg = _searchStatement.Evaluate(Globals);
                     if (errorMsgg != null)
                     {
-                        return new LineMarker {Color = Color.Red, Line = -1, Text = errorMsgg};
+                        if (lineMarker == null)
+                        {
+                            lineMarker = new LineMarker {Color = Color.Red, Line = -1, Text = errorMsgg};
+                        }
                     }
                 }
                 else if (Globals.ContainsKey(SearchVar))
@@ -134,6 +140,8 @@ namespace Diff.Expressions
                     Globals[SearchVar].NthItem(j).SetBoolValue(false);
                 }
             }
+
+            ClearSearchIntervals();
 
             UpdateSearchIntervals();
 

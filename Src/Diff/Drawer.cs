@@ -301,7 +301,7 @@ namespace Diff
             _manipulator.ReductionsManipulator.RedutionValueRects.Clear();
             if (_gs.ReductionValues.Count > 0)
             {
-                for (var i = 0; i < _gs.AssignmentStatements.Count; ++i)
+                for (var i = 0; i < _gs.ReductionValues.Count; ++i)
                 {
                     var ft = new FormattedText(
                         _gs.ReductionForm.SelectedReduction.Name + ": " + _gs.ReductionValues[i].ToString("F2"),
