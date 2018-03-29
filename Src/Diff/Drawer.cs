@@ -12,6 +12,7 @@ namespace Diff
     {
         public const int LeftOffset = 50;
         public const int TopOffset = 20;
+        private static readonly Typeface ArialTypeface = new Typeface("Arial");
 
         private readonly Pen _blackPen = new Pen
         {
@@ -28,6 +29,7 @@ namespace Diff
         private readonly Brush _graphFillBrush = new SolidColorBrush(Color.FromArgb(140, 160, 106, 58));
 
         private readonly GlobalScope _gs;
+        private readonly Brush _hoveredSearchAreaBrush = new SolidColorBrush(Color.FromArgb(70, 165, 116, 80));
         private readonly Brush _initialValueManipulatorColor = new SolidColorBrush(Color.FromRgb(255, 218, 122));
         private readonly MainGraphicOutput _mainGraphics;
         private readonly Manipulator _manipulator;
@@ -38,11 +40,11 @@ namespace Diff
             new LinearGradientBrush(Color.FromRgb(255, 218, 122), Color.FromRgb(239, 176, 83), 90);
 
         private readonly Brush _searchAreaBrush = new SolidColorBrush(Color.FromArgb(50, 200, 146, 98));
-        private readonly Brush _hoveredSearchAreaBrush = new SolidColorBrush(Color.FromArgb(70, 165, 116, 80));
-        private readonly Brush _selectedSearchAreaBrush = new SolidColorBrush(Color.FromArgb(90, 165, 116, 80));
 
         private readonly Pen _searchIntervalBorderPen =
             new Pen(new SolidColorBrush(Color.FromArgb(190, 149, 106, 78)), 2);
+
+        private readonly Brush _selectedSearchAreaBrush = new SolidColorBrush(Color.FromArgb(90, 165, 116, 80));
 
         private readonly Point _topLeftOffset = new Point(LeftOffset, TopOffset);
         private readonly Brush _whiteBrush = new SolidColorBrush(Colors.White);
@@ -52,7 +54,6 @@ namespace Diff
         private double?[] _initialValues;
         public Rect HostRect;
         public int VerticalScroll = 0;
-        private static readonly Typeface ArialTypeface = new Typeface("Arial");
 
         public Drawer(GlobalScope gs, MainGraphicOutput mainGraphics, Manipulator manipulator)
         {
