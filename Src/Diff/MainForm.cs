@@ -6,7 +6,7 @@ using Diff.Expressions;
 using Diff.Manipulators;
 using Diff.Reductions;
 
-// TODO исправить цвета при выделении
+// TODO рисовать текст НАД интервалом
 
 namespace Diff
 {

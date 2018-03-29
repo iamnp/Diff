@@ -28,7 +28,6 @@ namespace Diff
         private readonly Brush _graphFillBrush = new SolidColorBrush(Color.FromArgb(140, 160, 106, 58));
 
         private readonly GlobalScope _gs;
-        private readonly Brush _hoveredSearchAreaBrush = new SolidColorBrush(Color.FromArgb(100, 0, 0, 0));
         private readonly Brush _initialValueManipulatorColor = new SolidColorBrush(Color.FromRgb(255, 218, 122));
         private readonly MainGraphicOutput _mainGraphics;
         private readonly Manipulator _manipulator;
@@ -38,12 +37,13 @@ namespace Diff
         private readonly Brush _rowBackgroundBrush =
             new LinearGradientBrush(Color.FromRgb(255, 218, 122), Color.FromRgb(239, 176, 83), 90);
 
-        private readonly Brush _searchAreaBrush = new SolidColorBrush(Color.FromArgb(70, 200, 146, 98));
+        private readonly Brush _searchAreaBrush = new SolidColorBrush(Color.FromArgb(50, 200, 146, 98));
+        private readonly Brush _hoveredSearchAreaBrush = new SolidColorBrush(Color.FromArgb(70, 165, 116, 80));
+        private readonly Brush _selectedSearchAreaBrush = new SolidColorBrush(Color.FromArgb(90, 165, 116, 80));
 
         private readonly Pen _searchIntervalBorderPen =
-            new Pen(new SolidColorBrush(Color.FromArgb(190, 200, 146, 98)), 2);
+            new Pen(new SolidColorBrush(Color.FromArgb(190, 149, 106, 78)), 2);
 
-        private readonly Brush _selectedSearchAreaBrush = new SolidColorBrush(Color.FromArgb(140, 0, 0, 0));
         private readonly Point _topLeftOffset = new Point(LeftOffset, TopOffset);
         private readonly Brush _whiteBrush = new SolidColorBrush(Colors.White);
         private bool _finished = true;
@@ -52,6 +52,7 @@ namespace Diff
         private double?[] _initialValues;
         public Rect HostRect;
         public int VerticalScroll = 0;
+        private static readonly Typeface ArialTypeface = new Typeface("Arial");
 
         public Drawer(GlobalScope gs, MainGraphicOutput mainGraphics, Manipulator manipulator)
         {
@@ -219,7 +220,7 @@ namespace Diff
                 if ((value != null) && (_manipulator.InitialValueManipulator.MouseX > LeftOffset))
                 {
                     var ft = new FormattedText(value.Value.ToString("F2"), CultureInfo.CurrentCulture,
-                        FlowDirection.LeftToRight, new Typeface("Arial"), 12, Brushes.Black);
+                        FlowDirection.LeftToRight, ArialTypeface, 12, Brushes.Black);
                     dc.DrawText(ft,
                         new Point(_manipulator.InitialValueManipulator.MouseX + 4 - LeftOffset,
                             (i + 1) * ExpressionEditor.LineHeight - ft.Height - 3 - VerticalScroll));
@@ -237,7 +238,7 @@ namespace Diff
                     new Point(_manipulator.InitialValueManipulator.MouseX - LeftOffset, _mainGraphics.ActualHeight));
                 var ft = new FormattedText((_manipulator.InitialValueManipulator.MouseX - LeftOffset).ToString(),
                     CultureInfo.CurrentCulture,
-                    FlowDirection.LeftToRight, new Typeface("Arial"), 12, Brushes.Black);
+                    FlowDirection.LeftToRight, ArialTypeface, 12, Brushes.Black);
                 dc.DrawText(ft,
                     new Point(_manipulator.InitialValueManipulator.MouseX - LeftOffset + 4, 4));
             }
@@ -257,7 +258,7 @@ namespace Diff
             {
                 var len = _gs.SelectedInterval.End - _gs.SelectedInterval.Start + 1;
                 var ft = new FormattedText("Δn = " + len.ToString("D"), CultureInfo.CurrentCulture,
-                    FlowDirection.LeftToRight, new Typeface("Arial"), 12, Brushes.Black);
+                    FlowDirection.LeftToRight, ArialTypeface, 12, Brushes.Black);
                 dc.DrawText(ft, new Point(0, 0));
             }
         }
@@ -272,7 +273,7 @@ namespace Diff
                     if (j % 100 == 0)
                     {
                         var ft = new FormattedText(j.ToString("D"), CultureInfo.CurrentCulture,
-                            FlowDirection.LeftToRight, new Typeface("Arial"), 12, Brushes.Black);
+                            FlowDirection.LeftToRight, ArialTypeface, 12, Brushes.Black);
                         dc.DrawText(ft, new Point(j + LeftOffset + 2, 0));
                         dc.DrawLine(_blackPen, new Point(j + LeftOffset, 5), new Point(j + LeftOffset, 20));
                     }
@@ -306,13 +307,13 @@ namespace Diff
                     var ft = new FormattedText(
                         _gs.ReductionForm.SelectedReduction.Name + ": " + _gs.ReductionValues[i].ToString("F2"),
                         CultureInfo.CurrentCulture,
-                        FlowDirection.LeftToRight, new Typeface("Arial"), 12, Brushes.Black);
+                        FlowDirection.LeftToRight, ArialTypeface, 12, Brushes.Black);
                     var p1 = new Point(_gs.SelectedInterval.End + 2,
                         (i + 1) * ExpressionEditor.LineHeight - 2 * ft.Height - 3 - VerticalScroll);
                     dc.DrawText(ft, p1);
 
                     var ft2 = new FormattedText("▼", CultureInfo.CurrentCulture,
-                        FlowDirection.LeftToRight, new Typeface("Arial"), 8, Brushes.Black);
+                        FlowDirection.LeftToRight, ArialTypeface, 8, Brushes.Black);
                     dc.DrawText(ft2,
                         new Point(_gs.SelectedInterval.End + 3 + ft.Width,
                             (i + 1) * ExpressionEditor.LineHeight - 2 * ft.Height - VerticalScroll));
@@ -382,7 +383,7 @@ namespace Diff
             _manipulator.InitialValueManipulator.ManipulatedStatement = bestIndex;
 
             var ft = new FormattedText(initialValues[bestIndex].Value.ToString("F2"), CultureInfo.CurrentCulture,
-                FlowDirection.LeftToRight, new Typeface("Arial"), 12, Brushes.Black);
+                FlowDirection.LeftToRight, ArialTypeface, 12, Brushes.Black);
             var yy = initialPoints[bestIndex].Y + VerticalScroll;
             if (yy > ExpressionEditor.LineHeight * (bestIndex + 1))
             {
