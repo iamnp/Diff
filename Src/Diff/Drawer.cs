@@ -303,6 +303,11 @@ namespace Diff
             {
                 for (var i = 0; i < _gs.ReductionValues.Count; ++i)
                 {
+                    if (double.IsNaN(_gs.ReductionValues[i]))
+                    {
+                        continue;
+                    }
+
                     var ft = new FormattedText(
                         _gs.ReductionForm.SelectedReduction.Name + ": " + _gs.ReductionValues[i].ToString("F2"),
                         CultureInfo.CurrentCulture,
