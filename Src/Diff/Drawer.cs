@@ -52,6 +52,7 @@ namespace Diff
         private Point _firstPoint;
         private Point[] _initialPoints;
         private double?[] _initialValues;
+        private double?[] _selectedValues;
         public Rect HostRect;
         public int VerticalScroll = 0;
 
@@ -146,6 +147,11 @@ namespace Diff
                 _initialValues = new double?[_gs.AssignmentStatements.Count];
             }
 
+            if ((_selectedValues == null) || (_selectedValues.Length != _gs.AssignmentStatements.Count))
+            {
+                _selectedValues = new double?[_gs.AssignmentStatements.Count];
+            }
+
             for (var i = 0; i < _gs.AssignmentStatements.Count; ++i)
             {
                 var bottomLinePos = (i + 1) * ExpressionEditor.LineHeight - VerticalScroll;
@@ -161,54 +167,43 @@ namespace Diff
                     new Rect(new Point(0, i * ExpressionEditor.LineHeight - VerticalScroll),
                         new Point(_mainGraphics.ActualWidth, (i + 1) * ExpressionEditor.LineHeight - VerticalScroll)));
 
-                double? value = null;
-                var set = false;
+                _selectedValues[i] = null;
+                var initialPointSet = false;
                 if (_gs.AssignmentStatements[i].Assignee != null)
                 {
                     for (var j = 0; j < GlobalScope.Iterations; ++j)
                     {
+                        double? yPoint = null;
+
                         if (_gs.AssignmentStatements[i].Assignee.Parent != null)
                         {
                             var child = _gs.AssignmentStatements[i].Assignee.Parent.NthItem(j);
                             if (child.IsDouble)
                             {
-                                var yPoint = child.AsDouble;
-                                if ((int) _manipulator.InitialValueManipulator.MouseX - LeftOffset == j)
-                                {
-                                    value = yPoint;
-                                }
-
-                                var v = yPoint;
-                                yPoint *= -ExpressionEditor.LineHeight / 2.0;
-                                yPoint += i * ExpressionEditor.LineHeight + ExpressionEditor.LineHeight / 2 -
-                                          VerticalScroll;
-                                var p = new Point(j, yPoint);
-                                DrawPath(p);
-                                if (!set)
-                                {
-                                    set = true;
-                                    _initialValues[i] = v;
-                                    _initialPoints[i] = p;
-                                }
+                                yPoint = child.AsDouble;
                             }
                         }
                         else if (_gs.AssignmentStatements[i].Assignee.IsDouble)
                         {
-                            var yPoint = _gs.AssignmentStatements[i].Assignee.AsDouble;
+                            yPoint = _gs.AssignmentStatements[i].Assignee.AsDouble;
+                        }
+
+                        if (yPoint != null)
+                        {
                             if ((int) _manipulator.InitialValueManipulator.MouseX - LeftOffset == j)
                             {
-                                value = yPoint;
+                                _selectedValues[i] = yPoint;
                             }
 
                             var v = yPoint;
                             yPoint *= -ExpressionEditor.LineHeight / 2.0;
                             yPoint += i * ExpressionEditor.LineHeight + ExpressionEditor.LineHeight / 2 -
                                       VerticalScroll;
-                            var p = new Point(j, yPoint);
+                            var p = new Point(j, yPoint.Value);
                             DrawPath(p);
-                            if (!set)
+                            if (!initialPointSet)
                             {
-                                set = true;
+                                initialPointSet = true;
                                 _initialValues[i] = v;
                                 _initialPoints[i] = p;
                             }
@@ -218,20 +213,23 @@ namespace Diff
 
                 StopPath(dc, new Rect(0, i * ExpressionEditor.LineHeight - VerticalScroll, _mainGraphics.ActualWidth,
                     ExpressionEditor.LineHeight));
-                if ((value != null) && (_manipulator.InitialValueManipulator.MouseX > LeftOffset))
-                {
-                    var ft = new FormattedText(value.Value.ToString("F2"), CultureInfo.CurrentCulture,
-                        FlowDirection.LeftToRight, ArialTypeface, 12, Brushes.Black);
-                    dc.DrawText(ft,
-                        new Point(_manipulator.InitialValueManipulator.MouseX + 4 - LeftOffset,
-                            (i + 1) * ExpressionEditor.LineHeight - ft.Height - 3 - VerticalScroll));
-                }
-
                 dc.DrawLine(_bottomLinePen, new Point(0, bottomLinePos),
                     new Point(_mainGraphics.ActualWidth, bottomLinePos));
             }
 
             DrawSearchIntervals(dc);
+
+            for (var i = 0; i < _gs.AssignmentStatements.Count; ++i)
+            {
+                if ((_selectedValues[i] != null) && (_manipulator.InitialValueManipulator.MouseX > LeftOffset))
+                {
+                    var ft = new FormattedText(_selectedValues[i].Value.ToString("F2"), CultureInfo.CurrentCulture,
+                        FlowDirection.LeftToRight, ArialTypeface, 12, Brushes.Black);
+                    dc.DrawText(ft,
+                        new Point(_manipulator.InitialValueManipulator.MouseX + 4 - LeftOffset,
+                            (i + 1) * ExpressionEditor.LineHeight - ft.Height - 3 - VerticalScroll));
+                }
+            }
 
             if (_manipulator.InitialValueManipulator.MouseX > LeftOffset)
             {

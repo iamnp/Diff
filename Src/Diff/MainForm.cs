@@ -6,8 +6,6 @@ using Diff.Expressions;
 using Diff.Manipulators;
 using Diff.Reductions;
 
-// TODO рисовать текст НАД интервалом
-
 namespace Diff
 {
     public partial class MainForm : Form
