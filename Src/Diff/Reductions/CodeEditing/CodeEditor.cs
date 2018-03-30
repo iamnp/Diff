@@ -509,7 +509,10 @@ namespace Diff.Reductions.CodeEditing
         {
             _initialMouseXPos = x;
             var cursorPos = CharPosToIndex(_selection.End);
-
+            if (cursorPos >= _text.Length)
+            {
+                return false;
+            }
             if (!IsNumberSymbol(_text[cursorPos]))
             {
                 if ((cursorPos > 0) && IsNumberSymbol(_text[cursorPos - 1]))
