@@ -33,15 +33,18 @@ namespace Diff.Manipulators
 
         private void MainGraphicsOnMouseDown(object sender, MouseButtonEventArgs e)
         {
-            var p = e.GetPosition(_mainGraphics);
             _clicked = false;
-            for (var i = 0; i < RedutionValueRects.Count; ++i)
+            if (e.ChangedButton == MouseButton.Left)
             {
-                if (RedutionValueRects[i].Contains(p))
+                var p = e.GetPosition(_mainGraphics);
+                for (var i = 0; i < RedutionValueRects.Count; ++i)
                 {
-                    _clicked = true;
-                    e.Handled = true;
-                    break;
+                    if (RedutionValueRects[i].Contains(p))
+                    {
+                        _clicked = true;
+                        e.Handled = true;
+                        break;
+                    }
                 }
             }
         }
